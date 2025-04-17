@@ -745,3 +745,14 @@ function MakeResponsive(uiElement)
     resize()
     game:GetService("RunService").RenderStepped:Connect(resize)
 end
+
+local Config = require(script.Parent.Config)
+local KeySystem = require(script.Parent.KeySystem)
+
+KeySystem:Validate(Config, function(allowed)
+    if allowed then
+        -- Tiếp tục khởi tạo GUI
+    else
+        warn("Key không hợp lệ.")
+    end
+end)
