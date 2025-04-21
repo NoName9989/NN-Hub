@@ -67,7 +67,7 @@ MinBtn.TextSize = 16
 local UICornerMin = Instance.new("UICorner", MinBtn)
 UICornerMin.CornerRadius = UDim.new(0, 6)
 
--- Close Button Logic
+-- Close Button
 local CloseBtn = Instance.new("TextButton")
 CloseBtn.Parent = MainFrame
 CloseBtn.Size = UDim2.new(0, 30, 0, 30)
@@ -79,59 +79,6 @@ CloseBtn.Font = Enum.Font.GothamBold
 CloseBtn.TextSize = 16
 local UICornerClose = Instance.new("UICorner", CloseBtn)
 UICornerClose.CornerRadius = UDim.new(0, 6)
-
--- Confirmation Box
-local ConfirmBox = Instance.new("Frame")
-ConfirmBox.Parent = ScreenGui
-ConfirmBox.Size = UDim2.new(0, 300, 0, 150)
-ConfirmBox.Position = UDim2.new(0.5, -150, 0.5, -75)
-ConfirmBox.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-ConfirmBox.BackgroundTransparency = 0.6
-ConfirmBox.Visible = false
-
-local ConfirmTitle = Instance.new("TextLabel")
-ConfirmTitle.Parent = ConfirmBox
-ConfirmTitle.Size = UDim2.new(1, 0, 0, 40)
-ConfirmTitle.Position = UDim2.new(0, 0, 0, 0)
-ConfirmTitle.Text = "Bạn chắc chắn muốn tắt menu?"
-ConfirmTitle.Font = Enum.Font.Gotham
-ConfirmTitle.TextSize = 18
-ConfirmTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
-ConfirmTitle.BackgroundTransparency = 1
-ConfirmTitle.TextAlign = Enum.TextXAlignment.Center
-
-local YesBtn = Instance.new("TextButton")
-YesBtn.Parent = ConfirmBox
-YesBtn.Size = UDim2.new(0, 120, 0, 40)
-YesBtn.Position = UDim2.new(0, 20, 0, 80)
-YesBtn.Text = "Có"
-YesBtn.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
-YesBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-
-local NoBtn = Instance.new("TextButton")
-NoBtn.Parent = ConfirmBox
-NoBtn.Size = UDim2.new(0, 120, 0, 40)
-NoBtn.Position = UDim2.new(0, 160, 0, 80)
-NoBtn.Text = "Không"
-NoBtn.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
-NoBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-
--- Handle Close Button Click
-CloseBtn.MouseButton1Click:Connect(function()
-    -- Show confirmation box
-    ConfirmBox.Visible = true
-end)
-
--- Handle Yes Button Click (close the menu)
-YesBtn.MouseButton1Click:Connect(function()
-    MainFrame.Visible = false
-    ConfirmBox.Visible = false
-end)
-
--- Handle No Button Click (close the confirmation box)
-NoBtn.MouseButton1Click:Connect(function()
-    ConfirmBox.Visible = false
-end)
 
 -- Game Name
 local GameName = Instance.new("TextLabel")
@@ -190,10 +137,9 @@ ClickZone.MouseButton1Click:Connect(function()
 	end
 end)
 
--- Close GUI
+-- Close GUI (hiển thị hộp xác nhận thay vì tắt luôn)
 CloseBtn.MouseButton1Click:Connect(function()
-	MainFrame.Visible = false
-	visible = false
+    ConfirmBox.Visible = true
 end)
 
 -- Toggle with RightShift
@@ -214,3 +160,59 @@ for i = 1, 10 do
 	task.wait(0.02)
 end
 MainFrame.BackgroundTransparency = 0.25
+
+-- Confirmation Box
+local ConfirmBox = Instance.new("Frame")
+ConfirmBox.Parent = ScreenGui
+ConfirmBox.Size = UDim2.new(0, 300, 0, 150)
+ConfirmBox.Position = UDim2.new(0.5, -150, 0.5, -75)
+ConfirmBox.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+ConfirmBox.BackgroundTransparency = 0.6
+ConfirmBox.Visible = false
+ConfirmBox.ZIndex = 10
+ConfirmBox.Active = true
+
+local ConfirmTitle = Instance.new("TextLabel")
+ConfirmTitle.Parent = ConfirmBox
+ConfirmTitle.Size = UDim2.new(1, 0, 0, 50)
+ConfirmTitle.Position = UDim2.new(0, 0, 0, 10)
+ConfirmTitle.Text = "Bạn chắc chắn muốn tắt menu?"
+ConfirmTitle.Font = Enum.Font.GothamBold
+ConfirmTitle.TextSize = 18
+ConfirmTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+ConfirmTitle.BackgroundTransparency = 1
+ConfirmTitle.TextWrapped = true
+
+local YesBtn = Instance.new("TextButton")
+YesBtn.Parent = ConfirmBox
+YesBtn.Size = UDim2.new(0, 120, 0, 40)
+YesBtn.Position = UDim2.new(0, 25, 0, 90)
+YesBtn.Text = "Có"
+YesBtn.BackgroundColor3 = Color3.fromRGB(50, 200, 100)
+YesBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+YesBtn.Font = Enum.Font.Gotham
+YesBtn.TextSize = 16
+Instance.new("UICorner", YesBtn)
+
+local NoBtn = Instance.new("TextButton")
+NoBtn.Parent = ConfirmBox
+NoBtn.Size = UDim2.new(0, 120, 0, 40)
+NoBtn.Position = UDim2.new(0, 155, 0, 90)
+NoBtn.Text = "Không"
+NoBtn.BackgroundColor3 = Color3.fromRGB(200, 60, 60)
+NoBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+NoBtn.Font = Enum.Font.Gotham
+NoBtn.TextSize = 16
+Instance.new("UICorner", NoBtn)
+
+-- Xử lý khi chọn Có
+YesBtn.MouseButton1Click:Connect(function()
+    MainFrame.Visible = false
+    visible = false
+    ConfirmBox.Visible = false
+end)
+
+-- Xử lý khi chọn Không
+NoBtn.MouseButton1Click:Connect(function()
+    ConfirmBox.Visible = false
+end)
