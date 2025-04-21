@@ -124,6 +124,53 @@ RightPanel.ScrollingDirection = Enum.ScrollingDirection.Y
 Instance.new("UICorner", RightPanel).CornerRadius = UDim.new(0, 8)
 
 local RightLayout = Instance.new("UIListLayout", RightPanel)
+local Tabs = {} -- bảng lưu tab và nội dung
+
+local function addTab(tabName)
+	-- Tạo nút tab bên trái
+	local tabButton = Instance.new("TextButton")
+	tabButton.Name = "TabButton_" .. tabName
+	tabButton.Text = tabName
+	tabButton.Size = UDim2.new(1, -10, 0, 40)
+	tabButton.BackgroundColor3 = Color3.fromRGB(210, 210, 210)
+	tabButton.TextColor3 = Color3.fromRGB(30, 30, 30)
+	tabButton.Font = Enum.Font.Gotham
+	tabButton.TextSize = 14
+	tabButton.Parent = LeftPanel
+	Instance.new("UICorner", tabButton).CornerRadius = UDim.new(0, 6)
+
+	-- Tạo frame nội dung bên phải
+	local contentFrame = Instance.new("Frame")
+	contentFrame.Name = "Content_" .. tabName
+	contentFrame.Size = UDim2.new(1, -10, 0, 300)
+	contentFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	contentFrame.BackgroundTransparency = 1
+	contentFrame.BorderSizePixel = 0
+	contentFrame.Visible = false
+	contentFrame.Parent = RightPanel
+
+	local contentLabel = Instance.new("TextLabel")
+	contentLabel.Size = UDim2.new(1, 0, 1, 0)
+	contentLabel.Text = "Nội dung của tab: " .. tabName
+	contentLabel.Font = Enum.Font.Gotham
+	contentLabel.TextSize = 16
+	contentLabel.TextColor3 = Color3.fromRGB(50, 50, 50)
+	contentLabel.BackgroundTransparency = 1
+	contentLabel.Parent = contentFrame
+
+	-- Lưu tab vào bảng
+	Tabs[tabName] = {
+		Button = tabButton,
+		Content = contentFrame
+	}
+
+	-- Sự kiện click để hiển thị nội dung tương ứng
+	tabButton.MouseButton1Click:Connect(function()
+		for name, t in pairs(Tabs) do
+			t.Content.Visible = (name == tabName)
+		end
+	end)
+end
 RightLayout.Padding = UDim.new(0, 6)
 RightLayout.SortOrder = Enum.SortOrder.LayoutOrder
 
@@ -281,3 +328,7 @@ game:GetService("RunService").RenderStepped:Connect(function()
 		MainFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
 	end
 end)
+
+addTab("Tổng quan")
+addTab("Chức năng")
+addTab("Cài đặt")
