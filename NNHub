@@ -229,3 +229,30 @@ StatsButton.MouseButton1Click:Connect(function()
     ServerStatsTab.Visible = true
     -- Thêm logic ẩn các tab khác ở đây nếu có
 end)
+
+-- Tab "Server Stats"
+local ServerStatsTab = Instance.new("Frame")
+ServerStatsTab.Parent = MainFrame
+ServerStatsTab.Size = UDim2.new(1, 0, 1, 0)
+ServerStatsTab.BackgroundTransparency = 1
+ServerStatsTab.Visible = false  -- Ẩn ban đầu
+
+-- Bạn đã tạo phần hiển thị các thông tin "Server Stats" ở đây
+-- Khi người dùng nhấn vào StatsButton, tab này sẽ hiển thị
+
+-- Hiển thị Server Stats và ẩn các tab khác
+StatsButton.MouseButton1Click:Connect(function()
+    -- Ẩn các tab khác
+    -- Ví dụ: MainTab.Visible = false
+
+    -- Hiển thị tab Server Stats
+    ServerStatsTab.Visible = true
+end)
+
+-- Tab chính (MainTab) - Ẩn khi chọn tab "Server Stats"
+MainTab.Visible = false
+-- Tab khác - Ẩn khi chọn tab "Server Stats"
+OtherTab.Visible = false
+
+-- Hiển thị tab "Server Stats"
+ServerStatsTab.Visible = true
