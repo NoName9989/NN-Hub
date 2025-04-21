@@ -275,34 +275,3 @@ for i = 1, 10 do
 end
 MainFrame.BackgroundTransparency = 0.25
 
--- Tạo tab mới cho "Server Stats"
-local serverStatsTab = win:CreateTab("Server Stats")
-
--- Hiển thị thông tin cơ bản về server và người chơi
-
--- Tên người chơi
-serverStatsTab:AddLabel("Tên người chơi: " .. game.Players.LocalPlayer.Name)
-
--- FPS server
-local fpsLabel = serverStatsTab:AddLabel("FPS server: Calculating...")
-
--- Số lượng người chơi
-serverStatsTab:AddLabel("Số lượng người chơi: " .. tostring(#game.Players:GetPlayers()))
-
--- Thời gian server
-serverStatsTab:AddLabel("Thời gian server: " .. tostring(os.date("%X", tick())))
-
--- Cập nhật FPS mỗi giây
-game:GetService("RunService").Heartbeat:Connect(function()
-    local fps = game:GetService("RunService").RenderStepped
-    fpsLabel:SetText("FPS server: " .. math.floor(1 / fps))
-end)
-
--- Cập nhật lại số lượng người chơi mỗi khi có người chơi mới hoặc rời server
-game.Players.PlayerAdded:Connect(function()
-    serverStatsTab:UpdateLabel("Số lượng người chơi: " .. tostring(#game.Players:GetPlayers()))
-end)
-
-game.Players.PlayerRemoving:Connect(function()
-    serverStatsTab:UpdateLabel("Số lượng người chơi: " .. tostring(#game.Players:GetPlayers()))
-end)
