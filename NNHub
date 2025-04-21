@@ -1,4 +1,9 @@
--- NN Hub Glass UI - No Blur, Draggable Minimized, FLAF Compatible
+-- Nếu GUI đã tồn tại thì xoá
+if game.CoreGui:FindFirstChild("NNHubGlassUI") then
+	game.CoreGui.NNHubGlassUI:Destroy()
+end
+
+-- NN Hub Glass UI - With Confirmation Box
 local UserInputService = game:GetService("UserInputService")
 
 local OpenKey = Enum.KeyCode.RightShift
@@ -92,11 +97,11 @@ GameName.TextColor3 = Color3.fromRGB(200, 200, 200)
 GameName.TextXAlignment = Enum.TextXAlignment.Right
 GameName.BackgroundTransparency = 1
 
--- ClickZone ImageButton (thu nhỏ)
+-- ClickZone (icon hiển thị khi minimize)
 local ClickZone = Instance.new("ImageButton")
 ClickZone.Name = "ClickZone"
 ClickZone.Parent = ScreenGui
-ClickZone.Size = UDim2.new(0, 40, 0, 40) -- Tỉ lệ 1:1
+ClickZone.Size = UDim2.new(0, 40, 0, 40)
 ClickZone.Position = UDim2.new(0, 60, 0, 60)
 ClickZone.BackgroundTransparency = 1
 ClickZone.Image = "rbxassetid://128467874968339"
@@ -107,24 +112,15 @@ ClickZone.Draggable = true
 
 -- Minimize Logic
 local isMinimized = false
-local originalSize = MainFrame.Size
 
 local function minimize()
 	isMinimized = true
-	Title.Visible = false
-	GameName.Visible = false
-	MinBtn.Visible = false
-	CloseBtn.Visible = false
 	MainFrame.Visible = false
 	ClickZone.Visible = true
 end
 
 local function maximize()
 	isMinimized = false
-	Title.Visible = true
-	GameName.Visible = true
-	MinBtn.Visible = true
-	CloseBtn.Visible = true
 	MainFrame.Visible = true
 	ClickZone.Visible = false
 	MainFrame.Position = defaultPos
@@ -136,30 +132,6 @@ ClickZone.MouseButton1Click:Connect(function()
 		maximize()
 	end
 end)
-
--- Close GUI (hiển thị hộp xác nhận thay vì tắt luôn)
-CloseBtn.MouseButton1Click:Connect(function()
-    ConfirmBox.Visible = true
-end)
-
--- Toggle with RightShift
-UserInputService.InputBegan:Connect(function(input, gpe)
-	if not gpe and input.KeyCode == OpenKey then
-		visible = not visible
-		MainFrame.Visible = visible
-	end
-end)
-
--- Fade-in effect
-MainFrame.Visible = false
-task.wait(0.4)
-MainFrame.Visible = true
-MainFrame.BackgroundTransparency = 1
-for i = 1, 10 do
-	MainFrame.BackgroundTransparency = 1 - (i * 0.075)
-	task.wait(0.02)
-end
-MainFrame.BackgroundTransparency = 0.25
 
 -- Confirmation Box
 local ConfirmBox = Instance.new("Frame")
@@ -205,14 +177,38 @@ NoBtn.Font = Enum.Font.Gotham
 NoBtn.TextSize = 16
 Instance.new("UICorner", NoBtn)
 
--- Xử lý khi chọn Có
-YesBtn.MouseButton1Click:Connect(function()
-    MainFrame.Visible = false
-    visible = false
-    ConfirmBox.Visible = false
+-- Hiện hộp xác nhận khi bấm X
+CloseBtn.MouseButton1Click:Connect(function()
+	ConfirmBox.Visible = true
 end)
 
--- Xử lý khi chọn Không
-NoBtn.MouseButton1Click:Connect(function()
-    ConfirmBox.Visible = false
+-- Nếu chọn Có
+YesBtn.MouseButton1Click:Connect(function()
+	MainFrame.Visible = false
+	visible = false
+	ConfirmBox.Visible = false
 end)
+
+-- Nếu chọn Không
+NoBtn.MouseButton1Click:Connect(function()
+	ConfirmBox.Visible = false
+end)
+
+-- Toggle bằng RightShift
+UserInputService.InputBegan:Connect(function(input, gpe)
+	if not gpe and input.KeyCode == OpenKey then
+		visible = not visible
+		MainFrame.Visible = visible
+	end
+end)
+
+-- Fade-in
+MainFrame.Visible = false
+task.wait(0.4)
+MainFrame.Visible = true
+MainFrame.BackgroundTransparency = 1
+for i = 1, 10 do
+	MainFrame.BackgroundTransparency = 1 - (i * 0.075)
+	task.wait(0.02)
+end
+MainFrame.BackgroundTransparency = 0.25
