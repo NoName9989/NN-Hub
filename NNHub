@@ -256,3 +256,31 @@ OtherTab.Visible = false
 
 -- Hiển thị tab "Server Stats"
 ServerStatsTab.Visible = true
+
+local ServerStatsTab = Instance.new("Frame")
+ServerStatsTab.Name = "ServerStatsTab"
+ServerStatsTab.Parent = MainFrame
+ServerStatsTab.Size = UDim2.new(1, -20, 1, -60)
+ServerStatsTab.Position = UDim2.new(0, 10, 0, 50)
+ServerStatsTab.BackgroundTransparency = 1
+ServerStatsTab.Visible = false
+
+-- Thông báo like và sub
+local InfoLabel = Instance.new("TextLabel")
+InfoLabel.Parent = ServerStatsTab
+InfoLabel.Size = UDim2.new(1, 0, 0, 30)
+InfoLabel.Position = UDim2.new(0, 0, 0, 0)
+InfoLabel.Text = "Hãy like và sub cho NoNameAKA trên Youtube và TikTok"
+InfoLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+InfoLabel.Font = Enum.Font.Gotham
+InfoLabel.TextSize = 14
+InfoLabel.BackgroundTransparency = 1
+
+StatsButton.MouseButton1Click:Connect(function()
+    -- Ẩn các tab khác nếu có
+    if MainTab then MainTab.Visible = false end
+    if OtherTab then OtherTab.Visible = false end
+
+    -- Hiện Server Stats tab
+    ServerStatsTab.Visible = true
+end)
