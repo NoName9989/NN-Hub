@@ -1,0 +1,163 @@
+-- NN Hub Glass UI - No Blur, Draggable Minimized, FLAF Compatible
+local UserInputService = game:GetService("UserInputService")
+
+local OpenKey = Enum.KeyCode.RightShift
+local visible = true
+
+-- GUI Base
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "NNHubGlassUI"
+ScreenGui.Parent = game.CoreGui
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+ScreenGui.ResetOnSpawn = false
+
+-- Main Frame
+local MainFrame = Instance.new("Frame")
+MainFrame.Name = "MainFrame"
+MainFrame.Parent = ScreenGui
+MainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+MainFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
+MainFrame.Size = UDim2.new(0, 420, 0, 300)
+MainFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+MainFrame.BackgroundTransparency = 0.25
+MainFrame.BorderSizePixel = 0
+MainFrame.Active = true
+MainFrame.Draggable = true
+
+local defaultPos = MainFrame.Position
+
+local UICorner = Instance.new("UICorner")
+UICorner.CornerRadius = UDim.new(0, 12)
+UICorner.Parent = MainFrame
+
+-- Semi-transparent Glass Layer
+local GlassLayer = Instance.new("Frame")
+GlassLayer.Parent = MainFrame
+GlassLayer.Size = UDim2.new(1, 0, 1, 0)
+GlassLayer.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+GlassLayer.BackgroundTransparency = 0.85
+GlassLayer.BorderSizePixel = 0
+GlassLayer.ZIndex = 0
+
+local UICornerGlass = Instance.new("UICorner", GlassLayer)
+UICornerGlass.CornerRadius = UDim.new(0, 12)
+
+-- Title
+local Title = Instance.new("TextLabel")
+Title.Parent = MainFrame
+Title.Size = UDim2.new(1, -80, 0, 40)
+Title.Position = UDim2.new(0, 10, 0, 0)
+Title.BackgroundTransparency = 1
+Title.Text = "NN Hub - by NoName AKA"
+Title.Font = Enum.Font.GothamBold
+Title.TextSize = 22
+Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+Title.TextXAlignment = Enum.TextXAlignment.Left
+
+-- Minimize Button
+local MinBtn = Instance.new("TextButton")
+MinBtn.Parent = MainFrame
+MinBtn.Size = UDim2.new(0, 30, 0, 30)
+MinBtn.Position = UDim2.new(1, -70, 0, 7)
+MinBtn.BackgroundColor3 = Color3.fromRGB(200, 200, 200)
+MinBtn.Text = "◻"
+MinBtn.TextColor3 = Color3.fromRGB(50, 50, 50)
+MinBtn.Font = Enum.Font.Gotham
+MinBtn.TextSize = 16
+local UICornerMin = Instance.new("UICorner", MinBtn)
+UICornerMin.CornerRadius = UDim.new(0, 6)
+
+-- Close Button
+local CloseBtn = Instance.new("TextButton")
+CloseBtn.Parent = MainFrame
+CloseBtn.Size = UDim2.new(0, 30, 0, 30)
+CloseBtn.Position = UDim2.new(1, -35, 0, 7)
+CloseBtn.BackgroundColor3 = Color3.fromRGB(255, 90, 90)
+CloseBtn.Text = "X"
+CloseBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+CloseBtn.Font = Enum.Font.GothamBold
+CloseBtn.TextSize = 16
+local UICornerClose = Instance.new("UICorner", CloseBtn)
+UICornerClose.CornerRadius = UDim.new(0, 6)
+
+-- Game Name
+local GameName = Instance.new("TextLabel")
+GameName.Parent = MainFrame
+GameName.Size = UDim2.new(1, -10, 0, 18)
+GameName.Position = UDim2.new(0, 0, 1, -20)
+GameName.Text = "Anime Ranger X"
+GameName.Font = Enum.Font.Gotham
+GameName.TextSize = 13
+GameName.TextColor3 = Color3.fromRGB(200, 200, 200)
+GameName.TextXAlignment = Enum.TextXAlignment.Right
+GameName.BackgroundTransparency = 1
+
+-- ClickZone ImageButton (thu nhỏ)
+local ClickZone = Instance.new("ImageButton")
+ClickZone.Name = "ClickZone"
+ClickZone.Parent = ScreenGui
+ClickZone.Size = UDim2.new(0, 40, 0, 40) -- Tỉ lệ 1:1
+ClickZone.Position = UDim2.new(0, 60, 0, 60)
+ClickZone.BackgroundTransparency = 1
+ClickZone.Image = "rbxassetid://128467874968339"
+ClickZone.Visible = false
+ClickZone.ZIndex = 1000
+ClickZone.Active = true
+ClickZone.Draggable = true
+
+-- Minimize Logic
+local isMinimized = false
+local originalSize = MainFrame.Size
+
+local function minimize()
+	isMinimized = true
+	Title.Visible = false
+	GameName.Visible = false
+	MinBtn.Visible = false
+	CloseBtn.Visible = false
+	MainFrame.Visible = false
+	ClickZone.Visible = true
+end
+
+local function maximize()
+	isMinimized = false
+	Title.Visible = true
+	GameName.Visible = true
+	MinBtn.Visible = true
+	CloseBtn.Visible = true
+	MainFrame.Visible = true
+	ClickZone.Visible = false
+	MainFrame.Position = defaultPos
+end
+
+MinBtn.MouseButton1Click:Connect(minimize)
+ClickZone.MouseButton1Click:Connect(function()
+	if isMinimized then
+		maximize()
+	end
+end)
+
+-- Close GUI
+CloseBtn.MouseButton1Click:Connect(function()
+	MainFrame.Visible = false
+	visible = false
+end)
+
+-- Toggle with RightShift
+UserInputService.InputBegan:Connect(function(input, gpe)
+	if not gpe and input.KeyCode == OpenKey then
+		visible = not visible
+		MainFrame.Visible = visible
+	end
+end)
+
+-- Fade-in effect
+MainFrame.Visible = false
+task.wait(0.4)
+MainFrame.Visible = true
+MainFrame.BackgroundTransparency = 1
+for i = 1, 10 do
+	MainFrame.BackgroundTransparency = 1 - (i * 0.075)
+	task.wait(0.02)
+end
+MainFrame.BackgroundTransparency = 0.25
