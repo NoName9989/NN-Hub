@@ -104,53 +104,10 @@ LeftPanel.AutomaticCanvasSize = Enum.AutomaticSize.Y
 LeftPanel.ScrollingDirection = Enum.ScrollingDirection.Y
 Instance.new("UICorner", LeftPanel).CornerRadius = UDim.new(0, 8)
 
-local TabButtons = {}
-local CurrentTab = nil
-
--- Tạo khung chứa nút tab
-
 local LeftLayout = Instance.new("UIListLayout", LeftPanel)
 LeftLayout.Padding = UDim.new(0, 6)
 LeftLayout.SortOrder = Enum.SortOrder.LayoutOrder
 
-local function CreateTab(name)
-	local Button = Instance.new("TextButton")
-	Button.Size = UDim2.new(1, -10, 0, 36)
-	Button.Position = UDim2.new(0, 5, 0, 0)
-	Button.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-	Button.BackgroundTransparency = 0.8
-	Button.Text = name
-	Button.Font = Enum.Font.GothamBold
-	Button.TextSize = 14
-	Button.TextColor3 = Color3.fromRGB(40, 40, 40)
-	Button.Parent = LeftPanel
-	Button.AutoButtonColor = false
-	Instance.new("UICorner", Button).CornerRadius = UDim.new(0, 6)
-
-	local TabFrame = Instance.new("Frame")
-	TabFrame.Size = UDim2.new(1, 0, 1, 0)
-	TabFrame.BackgroundTransparency = 1
-	TabFrame.Visible = false
-	TabFrame.Parent = RightPanel
-
-	local Layout = Instance.new("UIListLayout", TabFrame)
-	Layout.Padding = UDim.new(0, 6)
-	Layout.SortOrder = Enum.SortOrder.LayoutOrder
-
-	TabButtons[name] = {Button = Button, Frame = TabFrame}
-
-	Button.MouseButton1Click:Connect(function()
-		for _, tab in pairs(TabButtons) do
-			tab.Frame.Visible = false
-			tab.Button.BackgroundTransparency = 0.8
-		end
-		TabFrame.Visible = true
-		Button.BackgroundTransparency = 0.4
-		CurrentTab = TabFrame
-	end)
-
-	return TabFrame
-end
 
 local RightPanel = Instance.new("ScrollingFrame")
 RightPanel.Name = "RightPanel"
@@ -319,45 +276,3 @@ for i = 1, 10 do
 end
 MainFrame.BackgroundTransparency = 0.25
 
--- Tạo Tab Server Stats
-local ServerStatsTab = CreateTab("Server Stats")
-
--- Like & Sub
-local LikeBox = CreateStatBox("Ủng hộ NoNameAKA", "Nhớ Like và Subscribe nhé!")
-LikeBox.Parent = ServerStatsTab
-
--- Tên người chơi
-local NameBox, NameContent = CreateStatBox("Tên người chơi", game.Players.LocalPlayer.Name)
-NameBox.Parent = ServerStatsTab
-
--- FPS
-local FPSBox, FPSContent = CreateStatBox("FPS", "Đang đo...")
-FPSBox.Parent = ServerStatsTab
-
--- Server Time
-local TimeBox, TimeContent = CreateStatBox("Thời gian Server", "00:00:00")
-TimeBox.Parent = ServerStatsTab
-
--- Player Count
-local CountBox, CountContent = CreateStatBox("Số người trong server", tostring(#game.Players:GetPlayers()))
-CountBox.Parent = ServerStatsTab
-
--- Cập nhật liên tục
-task.spawn(function()
-	local RunService = game:GetService("RunService")
-	local frames = 0
-	local lastUpdate = tick()
-
-	RunService.RenderStepped:Connect(function()
-		frames += 1
-		if tick() - lastUpdate >= 1 then
-			FPSContent.Text = tostring(frames) .. " FPS"
-			TimeContent.Text = os.date("%H:%M:%S")
-			CountContent.Text = tostring(#game.Players:GetPlayers())
-			frames = 0
-			lastUpdate = tick()
-		end
-	end)
-end)
--- Mở tab đầu tiên mặc định
-TabButtons["Server Stats"].Button:FireEvent("MouseButton1Click")
