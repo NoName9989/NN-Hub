@@ -1,9 +1,10 @@
+-- NN Hub Glass UI - With Confirmation Box (Đã tích hợp bố cục 2:8)
+
 -- Nếu GUI đã tồn tại thì xoá
 if game.CoreGui:FindFirstChild("NNHubGlassUI") then
 	game.CoreGui.NNHubGlassUI:Destroy()
 end
 
--- NN Hub Glass UI - With Confirmation Box
 local UserInputService = game:GetService("UserInputService")
 
 local OpenKey = Enum.KeyCode.RightShift
@@ -35,7 +36,7 @@ local UICorner = Instance.new("UICorner")
 UICorner.CornerRadius = UDim.new(0, 12)
 UICorner.Parent = MainFrame
 
--- Semi-transparent Glass Layer
+-- Glass layer
 local GlassLayer = Instance.new("Frame")
 GlassLayer.Parent = MainFrame
 GlassLayer.Size = UDim2.new(1, 0, 1, 0)
@@ -47,7 +48,7 @@ GlassLayer.ZIndex = 0
 local UICornerGlass = Instance.new("UICorner", GlassLayer)
 UICornerGlass.CornerRadius = UDim.new(0, 12)
 
--- Title
+-- Title (ẩn vì dùng layout mới)
 local Title = Instance.new("TextLabel")
 Title.Parent = MainFrame
 Title.Size = UDim2.new(1, -80, 0, 40)
@@ -58,8 +59,102 @@ Title.Font = Enum.Font.GothamBold
 Title.TextSize = 22
 Title.TextColor3 = Color3.fromRGB(255, 255, 255)
 Title.TextXAlignment = Enum.TextXAlignment.Left
+Title.Visible = false
 
--- Minimize Button
+-- TÍCH HỢP BỐ CỤC 2:8 VÀ TIÊU ĐỀ
+
+-- Tổng layout chứa mọi thứ bên trong MainFrame
+local MainLayout = Instance.new("Frame")
+MainLayout.Name = "MainLayout"
+MainLayout.Parent = MainFrame
+MainLayout.AnchorPoint = Vector2.new(0.5, 0.5)
+MainLayout.Position = UDim2.new(0.5, 0, 0.5, 0)
+MainLayout.Size = UDim2.new(1, -20, 1, -20)
+MainLayout.BackgroundTransparency = 1
+
+-- Tiêu đề
+local TitleSection = Instance.new("Frame")
+TitleSection.Name = "TitleSection"
+TitleSection.Parent = MainLayout
+TitleSection.Size = UDim2.new(1, 0, 0, 50)
+TitleSection.Position = UDim2.new(0, 0, 0, 0)
+TitleSection.BackgroundColor3 = Color3.fromRGB(240, 240, 240)
+TitleSection.BackgroundTransparency = 0.4
+TitleSection.BorderSizePixel = 0
+Instance.new("UICorner", TitleSection).CornerRadius = UDim.new(0, 8)
+
+local TitleLabel = Instance.new("TextLabel")
+TitleLabel.Parent = TitleSection
+TitleLabel.Size = UDim2.new(1, 0, 1, 0)
+TitleLabel.BackgroundTransparency = 1
+TitleLabel.Text = "NN Hub Menu"
+TitleLabel.Font = Enum.Font.GothamBold
+TitleLabel.TextSize = 20
+TitleLabel.TextColor3 = Color3.fromRGB(30, 30, 30)
+TitleLabel.TextXAlignment = Enum.TextXAlignment.Center
+TitleLabel.TextYAlignment = Enum.TextYAlignment.Center
+
+-- Phần nội dung chia 2:8
+local ContentSection = Instance.new("Frame")
+ContentSection.Name = "ContentSection"
+ContentSection.Parent = MainLayout
+ContentSection.Size = UDim2.new(1, 0, 1, -60)
+ContentSection.Position = UDim2.new(0, 0, 0, 60)
+ContentSection.BackgroundTransparency = 1
+
+local LeftPanel = Instance.new("ScrollingFrame")
+LeftPanel.Name = "LeftPanel"
+LeftPanel.Parent = ContentSection
+LeftPanel.Size = UDim2.new(0.2, -5, 1, 0)
+LeftPanel.Position = UDim2.new(0, 0, 0, 0)
+LeftPanel.BackgroundColor3 = Color3.fromRGB(230, 230, 230)
+LeftPanel.BackgroundTransparency = 0.4
+LeftPanel.BorderSizePixel = 0
+LeftPanel.ScrollBarThickness = 6
+LeftPanel.CanvasSize = UDim2.new(0, 0, 0, 0)
+LeftPanel.AutomaticCanvasSize = Enum.AutomaticSize.Y
+LeftPanel.ScrollingDirection = Enum.ScrollingDirection.Y
+Instance.new("UICorner", LeftPanel).CornerRadius = UDim.new(0, 8)
+
+local LeftLayout = Instance.new("UIListLayout", LeftPanel)
+LeftLayout.Padding = UDim.new(0, 6)
+LeftLayout.SortOrder = Enum.SortOrder.LayoutOrder
+LeftPanel.Name = "LeftPanel"
+LeftPanel.Parent = ContentSection
+LeftPanel.Size = UDim2.new(0.2, -5, 1, 0)
+LeftPanel.Position = UDim2.new(0, 0, 0, 0)
+LeftPanel.BackgroundColor3 = Color3.fromRGB(230, 230, 230)
+LeftPanel.BackgroundTransparency = 0.4
+LeftPanel.BorderSizePixel = 0
+Instance.new("UICorner", LeftPanel).CornerRadius = UDim.new(0, 8)
+
+local RightPanel = Instance.new("ScrollingFrame")
+RightPanel.Name = "RightPanel"
+RightPanel.Parent = ContentSection
+RightPanel.Size = UDim2.new(0.8, -5, 1, 0)
+RightPanel.Position = UDim2.new(0.2, 5, 0, 0)
+RightPanel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+RightPanel.BackgroundTransparency = 0.35
+RightPanel.BorderSizePixel = 0
+RightPanel.ScrollBarThickness = 6
+RightPanel.CanvasSize = UDim2.new(0, 0, 0, 0)
+RightPanel.AutomaticCanvasSize = Enum.AutomaticSize.Y
+RightPanel.ScrollingDirection = Enum.ScrollingDirection.Y
+Instance.new("UICorner", RightPanel).CornerRadius = UDim.new(0, 8)
+
+local RightLayout = Instance.new("UIListLayout", RightPanel)
+RightLayout.Padding = UDim.new(0, 6)
+RightLayout.SortOrder = Enum.SortOrder.LayoutOrder
+RightPanel.Name = "RightPanel"
+RightPanel.Parent = ContentSection
+RightPanel.Size = UDim2.new(0.8, -5, 1, 0)
+RightPanel.Position = UDim2.new(0.2, 5, 0, 0)
+RightPanel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+RightPanel.BackgroundTransparency = 0.35
+RightPanel.BorderSizePixel = 0
+Instance.new("UICorner", RightPanel).CornerRadius = UDim.new(0, 8)
+
+-- Minimize
 local MinBtn = Instance.new("TextButton")
 MinBtn.Parent = MainFrame
 MinBtn.Size = UDim2.new(0, 30, 0, 30)
@@ -69,10 +164,8 @@ MinBtn.Text = "◻"
 MinBtn.TextColor3 = Color3.fromRGB(50, 50, 50)
 MinBtn.Font = Enum.Font.Gotham
 MinBtn.TextSize = 16
-local UICornerMin = Instance.new("UICorner", MinBtn)
-UICornerMin.CornerRadius = UDim.new(0, 6)
+Instance.new("UICorner", MinBtn).CornerRadius = UDim.new(0, 6)
 
--- Close Button
 local CloseBtn = Instance.new("TextButton")
 CloseBtn.Parent = MainFrame
 CloseBtn.Size = UDim2.new(0, 30, 0, 30)
@@ -82,8 +175,7 @@ CloseBtn.Text = "X"
 CloseBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 CloseBtn.Font = Enum.Font.GothamBold
 CloseBtn.TextSize = 16
-local UICornerClose = Instance.new("UICorner", CloseBtn)
-UICornerClose.CornerRadius = UDim.new(0, 6)
+Instance.new("UICorner", CloseBtn).CornerRadius = UDim.new(0, 6)
 
 -- Game Name
 local GameName = Instance.new("TextLabel")
@@ -97,7 +189,7 @@ GameName.TextColor3 = Color3.fromRGB(200, 200, 200)
 GameName.TextXAlignment = Enum.TextXAlignment.Right
 GameName.BackgroundTransparency = 1
 
--- ClickZone (icon hiển thị khi minimize)
+-- ClickZone
 local ClickZone = Instance.new("ImageButton")
 ClickZone.Name = "ClickZone"
 ClickZone.Parent = ScreenGui
@@ -110,9 +202,7 @@ ClickZone.ZIndex = 1000
 ClickZone.Active = true
 ClickZone.Draggable = true
 
--- Minimize Logic
 local isMinimized = false
-
 local function minimize()
 	isMinimized = true
 	MainFrame.Visible = false
@@ -177,19 +267,16 @@ NoBtn.Font = Enum.Font.Gotham
 NoBtn.TextSize = 16
 Instance.new("UICorner", NoBtn)
 
--- Hiện hộp xác nhận khi bấm X
 CloseBtn.MouseButton1Click:Connect(function()
 	ConfirmBox.Visible = true
 end)
 
--- Nếu chọn Có
 YesBtn.MouseButton1Click:Connect(function()
 	MainFrame.Visible = false
 	visible = false
 	ConfirmBox.Visible = false
 end)
 
--- Nếu chọn Không
 NoBtn.MouseButton1Click:Connect(function()
 	ConfirmBox.Visible = false
 end)
@@ -212,4 +299,3 @@ for i = 1, 10 do
 	task.wait(0.02)
 end
 MainFrame.BackgroundTransparency = 0.25
-
