@@ -119,14 +119,6 @@ Instance.new("UICorner", LeftPanel).CornerRadius = UDim.new(0, 8)
 local LeftLayout = Instance.new("UIListLayout", LeftPanel)
 LeftLayout.Padding = UDim.new(0, 6)
 LeftLayout.SortOrder = Enum.SortOrder.LayoutOrder
-LeftPanel.Name = "LeftPanel"
-LeftPanel.Parent = ContentSection
-LeftPanel.Size = UDim2.new(0.2, -5, 1, 0)
-LeftPanel.Position = UDim2.new(0, 0, 0, 0)
-LeftPanel.BackgroundColor3 = Color3.fromRGB(230, 230, 230)
-LeftPanel.BackgroundTransparency = 0.4
-LeftPanel.BorderSizePixel = 0
-Instance.new("UICorner", LeftPanel).CornerRadius = UDim.new(0, 8)
 
 local RightPanel = Instance.new("ScrollingFrame")
 RightPanel.Name = "RightPanel"
@@ -145,14 +137,6 @@ Instance.new("UICorner", RightPanel).CornerRadius = UDim.new(0, 8)
 local RightLayout = Instance.new("UIListLayout", RightPanel)
 RightLayout.Padding = UDim.new(0, 6)
 RightLayout.SortOrder = Enum.SortOrder.LayoutOrder
-RightPanel.Name = "RightPanel"
-RightPanel.Parent = ContentSection
-RightPanel.Size = UDim2.new(0.8, -5, 1, 0)
-RightPanel.Position = UDim2.new(0.2, 5, 0, 0)
-RightPanel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-RightPanel.BackgroundTransparency = 0.35
-RightPanel.BorderSizePixel = 0
-Instance.new("UICorner", RightPanel).CornerRadius = UDim.new(0, 8)
 
 -- Minimize
 local MinBtn = Instance.new("TextButton")
