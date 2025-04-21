@@ -161,3 +161,67 @@ for i = 1, 10 do
 	task.wait(0.02)
 end
 MainFrame.BackgroundTransparency = 0.25
+-- Confirmation Box
+local ConfirmBox = Instance.new("Frame")
+ConfirmBox.Parent = ScreenGui
+ConfirmBox.Size = UDim2.new(0, 300, 0, 150)
+ConfirmBox.Position = UDim2.new(0.5, -150, 0.5, -75)
+ConfirmBox.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+ConfirmBox.BackgroundTransparency = 0.7
+ConfirmBox.Visible = false
+ConfirmBox.BorderSizePixel = 0
+ConfirmBox.ZIndex = 1000
+
+local ConfirmBoxTitle = Instance.new("TextLabel")
+ConfirmBoxTitle.Parent = ConfirmBox
+ConfirmBoxTitle.Size = UDim2.new(1, 0, 0, 40)
+ConfirmBoxTitle.Position = UDim2.new(0, 0, 0, 0)
+ConfirmBoxTitle.BackgroundTransparency = 1
+ConfirmBoxTitle.Text = "Bạn chắc chắn muốn tắt menu?"
+ConfirmBoxTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+ConfirmBoxTitle.TextSize = 18
+ConfirmBoxTitle.TextXAlignment = Enum.TextXAlignment.Center
+ConfirmBoxTitle.Font = Enum.Font.GothamBold
+
+-- Yes Button
+local YesBtn = Instance.new("TextButton")
+YesBtn.Parent = ConfirmBox
+YesBtn.Size = UDim2.new(0, 120, 0, 40)
+YesBtn.Position = UDim2.new(0, 20, 0, 70)
+YesBtn.Text = "Có"
+YesBtn.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
+YesBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+YesBtn.Font = Enum.Font.Gotham
+YesBtn.TextSize = 18
+local UICornerYes = Instance.new("UICorner", YesBtn)
+UICornerYes.CornerRadius = UDim.new(0, 6)
+
+-- No Button
+local NoBtn = Instance.new("TextButton")
+NoBtn.Parent = ConfirmBox
+NoBtn.Size = UDim2.new(0, 120, 0, 40)
+NoBtn.Position = UDim2.new(0, 160, 0, 70)
+NoBtn.Text = "Không"
+NoBtn.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+NoBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+NoBtn.Font = Enum.Font.Gotham
+NoBtn.TextSize = 18
+local UICornerNo = Instance.new("UICorner", NoBtn)
+UICornerNo.CornerRadius = UDim.new(0, 6)
+
+-- Hiển thị hộp xác nhận khi nhấn nút Close (X)
+CloseBtn.MouseButton1Click:Connect(function()
+    ConfirmBox.Visible = true
+end)
+
+-- Nút "Có" tắt menu và ẩn hộp xác nhận
+YesBtn.MouseButton1Click:Connect(function()
+    MainFrame.Visible = false
+    visible = false
+    ConfirmBox.Visible = false
+end)
+
+-- Nút "Không" đóng hộp xác nhận mà không tắt menu
+NoBtn.MouseButton1Click:Connect(function()
+    ConfirmBox.Visible = false
+end)
