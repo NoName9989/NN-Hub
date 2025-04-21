@@ -213,59 +213,30 @@ for i = 1, 10 do
 end
 MainFrame.BackgroundTransparency = 0.25
 
--- Thêm nút chuyển đến Server Stats Tab
+-- Tab Button: Server Stats
 local StatsButton = Instance.new("TextButton")
-StatsButton.Parent = MenuTab -- MenuTab là frame chứa các tab
-StatsButton.Size = UDim2.new(1, 0, 0, 40)
+StatsButton.Parent = MainFrame
+StatsButton.Size = UDim2.new(0, 120, 0, 30)
+StatsButton.Position = UDim2.new(0, 10, 0, 45)
+StatsButton.BackgroundColor3 = Color3.fromRGB(100, 100, 255)
 StatsButton.Text = "Server Stats"
-StatsButton.Font = Enum.Font.GothamBold
-StatsButton.TextSize = 18
 StatsButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-StatsButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+StatsButton.Font = Enum.Font.GothamBold
+StatsButton.TextSize = 14
+Instance.new("UICorner", StatsButton)
 
--- Tạo khi người dùng nhấp vào để chuyển đến tab Server Stats
-StatsButton.MouseButton1Click:Connect(function()
-    -- Ẩn tất cả các tab khác
-    ServerStatsTab.Visible = true
-    -- Thêm logic ẩn các tab khác ở đây nếu có
-end)
-
--- Tab "Server Stats"
-local ServerStatsTab = Instance.new("Frame")
-ServerStatsTab.Parent = MainFrame
-ServerStatsTab.Size = UDim2.new(1, 0, 1, 0)
-ServerStatsTab.BackgroundTransparency = 1
-ServerStatsTab.Visible = false  -- Ẩn ban đầu
-
--- Bạn đã tạo phần hiển thị các thông tin "Server Stats" ở đây
--- Khi người dùng nhấn vào StatsButton, tab này sẽ hiển thị
-
--- Hiển thị Server Stats và ẩn các tab khác
-StatsButton.MouseButton1Click:Connect(function()
-    -- Ẩn các tab khác
-    -- Ví dụ: MainTab.Visible = false
-
-    -- Hiển thị tab Server Stats
-    ServerStatsTab.Visible = true
-end)
-
--- Tab chính (MainTab) - Ẩn khi chọn tab "Server Stats"
-MainTab.Visible = false
--- Tab khác - Ẩn khi chọn tab "Server Stats"
-OtherTab.Visible = false
-
--- Hiển thị tab "Server Stats"
-ServerStatsTab.Visible = true
-
+-- Tab Content Frame: ServerStatsTab
 local ServerStatsTab = Instance.new("Frame")
 ServerStatsTab.Name = "ServerStatsTab"
 ServerStatsTab.Parent = MainFrame
-ServerStatsTab.Size = UDim2.new(1, -20, 1, -60)
-ServerStatsTab.Position = UDim2.new(0, 10, 0, 50)
+ServerStatsTab.Size = UDim2.new(1, -20, 1, -90)
+ServerStatsTab.Position = UDim2.new(0, 10, 0, 80)
 ServerStatsTab.BackgroundTransparency = 1
 ServerStatsTab.Visible = false
 
--- Thông báo like và sub
+-- Nội dung bên trong tab Server Stats
+
+-- 1. Thông báo like & sub
 local InfoLabel = Instance.new("TextLabel")
 InfoLabel.Parent = ServerStatsTab
 InfoLabel.Size = UDim2.new(1, 0, 0, 30)
@@ -276,11 +247,61 @@ InfoLabel.Font = Enum.Font.Gotham
 InfoLabel.TextSize = 14
 InfoLabel.BackgroundTransparency = 1
 
-StatsButton.MouseButton1Click:Connect(function()
-    -- Ẩn các tab khác nếu có
-    if MainTab then MainTab.Visible = false end
-    if OtherTab then OtherTab.Visible = false end
+-- 2. Tên người chơi
+local PlayerNameLabel = Instance.new("TextLabel")
+PlayerNameLabel.Parent = ServerStatsTab
+PlayerNameLabel.Size = UDim2.new(1, 0, 0, 25)
+PlayerNameLabel.Position = UDim2.new(0, 0, 0, 40)
+PlayerNameLabel.Text = "Tên người chơi: " .. game.Players.LocalPlayer.Name
+PlayerNameLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+PlayerNameLabel.Font = Enum.Font.Gotham
+PlayerNameLabel.TextSize = 14
+PlayerNameLabel.BackgroundTransparency = 1
 
-    -- Hiện Server Stats tab
-    ServerStatsTab.Visible = true
+-- 3. FPS (fake hiển thị hoặc bạn có thể thay đổi theo real-time nếu muốn)
+local FPSLabel = Instance.new("TextLabel")
+FPSLabel.Parent = ServerStatsTab
+FPSLabel.Size = UDim2.new(1, 0, 0, 25)
+FPSLabel.Position = UDim2.new(0, 0, 0, 70)
+FPSLabel.Text = "FPS Server: 60"
+FPSLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+FPSLabel.Font = Enum.Font.Gotham
+FPSLabel.TextSize = 14
+FPSLabel.BackgroundTransparency = 1
+
+-- 4. Server Time
+local TimeLabel = Instance.new("TextLabel")
+TimeLabel.Parent = ServerStatsTab
+TimeLabel.Size = UDim2.new(1, 0, 0, 25)
+TimeLabel.Position = UDim2.new(0, 0, 0, 100)
+TimeLabel.Text = "Thời gian Server: " .. os.date("%H:%M:%S")
+TimeLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+TimeLabel.Font = Enum.Font.Gotham
+TimeLabel.TextSize = 14
+TimeLabel.BackgroundTransparency = 1
+
+-- 5. Số lượng người chơi
+local PlayerCountLabel = Instance.new("TextLabel")
+PlayerCountLabel.Parent = ServerStatsTab
+PlayerCountLabel.Size = UDim2.new(1, 0, 0, 25)
+PlayerCountLabel.Position = UDim2.new(0, 0, 0, 130)
+PlayerCountLabel.Text = "Người chơi trong server: " .. tostring(#game.Players:GetPlayers())
+PlayerCountLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+PlayerCountLabel.Font = Enum.Font.Gotham
+PlayerCountLabel.TextSize = 14
+PlayerCountLabel.BackgroundTransparency = 1
+
+-- Cập nhật thời gian server & người chơi liên tục mỗi giây
+task.spawn(function()
+	while true do
+		TimeLabel.Text = "Thời gian Server: " .. os.date("%H:%M:%S")
+		PlayerCountLabel.Text = "Người chơi trong server: " .. tostring(#game.Players:GetPlayers())
+		task.wait(1)
+	end
+end)
+
+-- Hiển thị tab Server Stats khi nhấn nút
+StatsButton.MouseButton1Click:Connect(function()
+	-- Nếu có các tab khác, bạn cần ẩn nó tại đây (ví dụ: MainTab.Visible = false)
+	ServerStatsTab.Visible = true
 end)
