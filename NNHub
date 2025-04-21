@@ -212,3 +212,84 @@ for i = 1, 10 do
 	task.wait(0.02)
 end
 MainFrame.BackgroundTransparency = 0.25
+
+-- Tạo Frame cho tab Server Stats
+local ServerStatsTab = Instance.new("Frame")
+ServerStatsTab.Parent = MainFrame
+ServerStatsTab.Size = UDim2.new(1, 0, 1, 0) -- Chiếm toàn bộ diện tích của tab
+ServerStatsTab.BackgroundTransparency = 1 -- Trong suốt, chỉ hiển thị thông báo
+
+-- Thông báo yêu cầu like và sub
+local LikeSubMessage = Instance.new("TextLabel")
+LikeSubMessage.Parent = ServerStatsTab
+LikeSubMessage.Size = UDim2.new(1, 0, 0, 50)
+LikeSubMessage.Position = UDim2.new(0, 0, 0, 10)
+LikeSubMessage.BackgroundTransparency = 1
+LikeSubMessage.Text = "Hãy like và sub cho NoNameAKA trên Youtube và TikTok!"
+LikeSubMessage.Font = Enum.Font.GothamBold
+LikeSubMessage.TextSize = 18
+LikeSubMessage.TextColor3 = Color3.fromRGB(255, 255, 255)
+LikeSubMessage.TextAlign = Enum.TextXAlignment.Center
+LikeSubMessage.TextWrapped = true
+
+-- 1. Tên người chơi
+local PlayerName = Instance.new("TextLabel")
+PlayerName.Parent = ServerStatsTab
+PlayerName.Size = UDim2.new(1, 0, 0, 30)
+PlayerName.Position = UDim2.new(0, 0, 0, 70) -- Dưới thông báo yêu cầu like và sub
+PlayerName.BackgroundTransparency = 1
+PlayerName.Text = "Tên người chơi: " .. game.Players.LocalPlayer.Name
+PlayerName.Font = Enum.Font.Gotham
+PlayerName.TextSize = 16
+PlayerName.TextColor3 = Color3.fromRGB(255, 255, 255)
+PlayerName.TextXAlignment = Enum.TextXAlignment.Left
+
+-- 2. FPS của server
+local FPS = Instance.new("TextLabel")
+FPS.Parent = ServerStatsTab
+FPS.Size = UDim2.new(1, 0, 0, 30)
+FPS.Position = UDim2.new(0, 0, 0, 110) -- Dưới tên người chơi
+FPS.BackgroundTransparency = 1
+FPS.Text = "FPS: " .. math.floor(workspace:GetRealPhysicsFPS())
+FPS.Font = Enum.Font.Gotham
+FPS.TextSize = 16
+FPS.TextColor3 = Color3.fromRGB(255, 255, 255)
+FPS.TextXAlignment = Enum.TextXAlignment.Left
+
+-- 3. Thời gian hoạt động của server
+local ServerTime = Instance.new("TextLabel")
+ServerTime.Parent = ServerStatsTab
+ServerTime.Size = UDim2.new(1, 0, 0, 30)
+ServerTime.Position = UDim2.new(0, 0, 0, 150) -- Dưới FPS
+ServerTime.BackgroundTransparency = 1
+ServerTime.Text = "Thời gian hoạt động: " .. os.date("%H:%M:%S", tick())
+ServerTime.Font = Enum.Font.Gotham
+ServerTime.TextSize = 16
+ServerTime.TextColor3 = Color3.fromRGB(255, 255, 255)
+ServerTime.TextXAlignment = Enum.TextXAlignment.Left
+
+-- 4. Số lượng người chơi
+local PlayerCount = Instance.new("TextLabel")
+PlayerCount.Parent = ServerStatsTab
+PlayerCount.Size = UDim2.new(1, 0, 0, 30)
+PlayerCount.Position = UDim2.new(0, 0, 0, 190) -- Dưới thời gian hoạt động
+PlayerCount.BackgroundTransparency = 1
+PlayerCount.Text = "Số lượng người chơi: " .. #game.Players:GetPlayers()
+PlayerCount.Font = Enum.Font.Gotham
+PlayerCount.TextSize = 16
+PlayerCount.TextColor3 = Color3.fromRGB(255, 255, 255)
+PlayerCount.TextXAlignment = Enum.TextXAlignment.Left
+
+-- Cập nhật các thông tin mỗi giây
+while true do
+    -- Cập nhật FPS
+    FPS.Text = "FPS: " .. math.floor(workspace:GetRealPhysicsFPS())
+
+    -- Cập nhật thời gian hoạt động
+    ServerTime.Text = "Thời gian hoạt động: " .. os.date("%H:%M:%S", tick())
+
+    -- Cập nhật số lượng người chơi
+    PlayerCount.Text = "Số lượng người chơi: " .. #game.Players:GetPlayers()
+
+    wait(1)
+end
