@@ -124,6 +124,8 @@ RightPanel.ScrollingDirection = Enum.ScrollingDirection.Y
 Instance.new("UICorner", RightPanel).CornerRadius = UDim.new(0, 8)
 
 local RightLayout = Instance.new("UIListLayout", RightPanel)
+RightLayout.Padding = UDim.new(0, 6)
+RightLayout.SortOrder = Enum.SortOrder.LayoutOrder
 local Tabs = {} -- bảng lưu tab và nội dung
 
 local function addTab(tabName)
@@ -171,8 +173,7 @@ local function addTab(tabName)
 		end
 	end)
 end
-RightLayout.Padding = UDim.new(0, 6)
-RightLayout.SortOrder = Enum.SortOrder.LayoutOrder
+
 
 -- Minimize button
 local MinBtn = Instance.new("TextButton")
