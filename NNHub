@@ -48,18 +48,6 @@ GlassLayer.ZIndex = 0
 local UICornerGlass = Instance.new("UICorner", GlassLayer)
 UICornerGlass.CornerRadius = UDim.new(0, 12)
 
--- Title (ẩn vì dùng layout mới)
-local Title = Instance.new("TextLabel")
-Title.Parent = MainFrame
-Title.Size = UDim2.new(1, -80, 0, 40)
-Title.Position = UDim2.new(0, 10, 0, 0)
-Title.BackgroundTransparency = 1
-Title.Text = "NN Hub - by NoName AKA"
-Title.Font = Enum.Font.GothamBold
-Title.TextSize = 22
-Title.TextColor3 = Color3.fromRGB(255, 255, 255)
-Title.TextXAlignment = Enum.TextXAlignment.Left
-Title.Visible = false
 
 -- TÍCH HỢP BỐ CỤC 2:8 VÀ TIÊU ĐỀ
 
@@ -87,7 +75,7 @@ local TitleLabel = Instance.new("TextLabel")
 TitleLabel.Parent = TitleSection
 TitleLabel.Size = UDim2.new(1, 0, 1, 0)
 TitleLabel.BackgroundTransparency = 1
-TitleLabel.Text = "NN Hub Menu"
+TitleLabel.Text = "NN Hub"
 TitleLabel.Font = Enum.Font.GothamBold
 TitleLabel.TextSize = 20
 TitleLabel.TextColor3 = Color3.fromRGB(30, 30, 30)
