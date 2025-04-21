@@ -169,16 +169,15 @@ Instance.new("UICorner", tabButton).CornerRadius = UDim.new(0, 6)
 	}
 
 	-- Sự kiện click để hiển thị nội dung tương ứng
-	tabButton.MouseButton1Click:Connect(function()
-		for name, t in pairs(Tabs) do
-	t.Content.Visible = (name == tabName)
-	t.Button.BackgroundColor3 = Color3.fromRGB(230, 230, 230)
-end
-tabButton.BackgroundColor3 = Color3.fromRGB(200, 200, 255)
-		end
-	end)
-end
+tabButton.MouseButton1Click:Connect(function()
+	for name, t in pairs(Tabs) do
+		t.Content.Visible = (name == tabName)
+		t.Button.BackgroundColor3 = Color3.fromRGB(230, 230, 230)
+	end
 
+	-- Đổi màu tab được chọn
+	tabButton.BackgroundColor3 = Color3.fromRGB(200, 200, 255)
+end)
 
 -- Minimize button
 local MinBtn = Instance.new("TextButton")
