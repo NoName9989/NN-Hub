@@ -176,6 +176,10 @@ local function addTab(tabName)
 	tabButton.ClipsDescendants = true
 	tabButton.Parent = LeftPanel
 
+        local padding = Instance.new("UIPadding")
+        padding.PaddingLeft = UDim.new(0, 8) -- giảm nếu muốn sát hơn
+        padding.Parent = tabButton
+
 	local corner = Instance.new("UICorner")
 	corner.CornerRadius = UDim.new(0, 6)
 	corner.Parent = tabButton
