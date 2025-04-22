@@ -258,9 +258,11 @@ ClickZone.ZIndex = 1000
 ClickZone.Active = true
 ClickZone.Draggable = true
 
+local savedPos = defaultPos
 local isMinimized = false
 local function minimize()
 	isMinimized = true
+        savedPos = MainFrame.Position
 	MainFrame.Visible = false
 	ClickZone.Visible = true
 end
@@ -269,7 +271,7 @@ local function maximize()
 	isMinimized = false
 	MainFrame.Visible = true
 	ClickZone.Visible = false
-	MainFrame.Position = defaultPos
+	MainFrame.Position = savedPos
 end
 
 MinBtn.MouseButton1Click:Connect(minimize)
