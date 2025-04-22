@@ -476,6 +476,57 @@ end
     end)
 end
 
+local function createSlider(parent, minValue, maxValue, defaultValue, size, position)
+    -- Tạo Frame cho Slider
+    local slider = Instance.new("Frame")
+    slider.Size = size or UDim2.new(0, 300, 0, 20)
+    slider.Position = position or UDim2.new(0, 0, 0, 0)
+    slider.BackgroundColor3 = Color3.fromRGB(200, 200, 200)
+    slider.Parent = parent
+
+    -- Tạo thanh trượt
+    local sliderBar = Instance.new("Frame")
+    sliderBar.Size = UDim2.new((defaultValue - minValue) / (maxValue - minValue), 0, 1, 0)
+    sliderBar.Position = UDim2.new(0, 0, 0, 0)
+    sliderBar.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+    sliderBar.Parent = slider
+
+    -- Tạo nút trượt
+    local sliderButton = Instance.new("TextButton")
+    sliderButton.Size = UDim2.new(0, 20, 0, 20)
+    sliderButton.Position = UDim2.new((defaultValue - minValue) / (maxValue - minValue), 0, 0, 0)
+    sliderButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+    sliderButton.Text = ""
+    sliderButton.Parent = slider
+
+    -- Xử lý sự kiện di chuyển nút trượt
+    local dragging = false
+    local startPos = nil
+    sliderButton.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragging = true
+            startPos = input.Position.X
+        end
+    end)
+
+    sliderButton.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragging = false
+        end
+    end)
+
+    game:GetService("UserInputService").InputChanged:Connect(function(input)
+        if dragging then
+            local delta = input.Position.X - startPos
+            local newPos = math.clamp(sliderButton.Position.X.Offset + delta, 0, slider.Size.X.Offset - sliderButton.Size.X.Offset)
+            sliderButton.Position = UDim2.new(0, newPos, 0, 0)
+
+            -- Cập nhật thanh trượt
+            sliderBar.Size = UDim2.new(newPos / slider.Size.X.Offset, 0, 1, 0)
+        end
+    end)
+end
+
 local startTime = tick()
 
 -- tab 1
@@ -561,58 +612,14 @@ end, 250)
 addTab("🌠Summon")
 
 local tab2Content = Tabs["🌠Summon"].Content
+-- Tạo Dropdown cho "x" trong Tab 2
+createDropdown(tab2, {"Standard", "Centered"}, "Standard", UDim2.new(0, 200, 0, 40), UDim2.new(0, 50, 0, 250))
 
--- Khởi tạo các đối tượng UI trong Tab 2
-local tab2 = Instance.new("Frame")
-tab2.Size = UDim2.new(0, 400, 0, 300)  -- Cài đặt kích thước của Tab 2
-tab2.Position = UDim2.new(0, 10, 0, 10)  -- Vị trí tab 2 trên giao diện
+-- Tạo Dropdown cho "y" trong Tab 2
+createDropdown(tab2, {"1", "10"}, "1", UDim2.new(0, 200, 0, 40), UDim2.new(0, 50, 0, 300))
 
--- Thanh trượt cho 'x'
-local sliderX = Instance.new("Slider")
-sliderX.Parent = tab2
-sliderX.Size = UDim2.new(0, 300, 0, 50)
-sliderX.Position = UDim2.new(0, 50, 0, 50)
-sliderX.MinValue = 0
-sliderX.MaxValue = 1  -- Chọn giữa Standard và Centered
-sliderX.Value = 0  -- Giá trị mặc định
 
--- Thanh trượt cho 'y'
-local sliderY = Instance.new("Slider")
-sliderY.Parent = tab2
-sliderY.Size = UDim2.new(0, 300, 0, 50)
-sliderY.Position = UDim2.new(0, 50, 0, 150)
-sliderY.MinValue = 1
-sliderY.MaxValue = 10
-sliderY.Value = 1  -- Giá trị mặc định
-
--- Nút "Auto Summon"
-local autoSummonButton = Instance.new("TextButton")
-autoSummonButton.Parent = tab2
-autoSummonButton.Size = UDim2.new(0, 150, 0, 50)
-autoSummonButton.Position = UDim2.new(0, 125, 0, 220)
-autoSummonButton.Text = "Auto Summon"
-autoSummonButton.BackgroundColor3 = Color3.fromRGB(0, 255, 0)  -- Màu nền của nút
-autoSummonButton.MouseButton1Click:Connect(function()
-    -- Lấy giá trị của các thanh trượt và đảm bảo giá trị là chuỗi
-    local xValue = sliderX.Value == 0 and "Standard" or "Centered"
-    local yValue = tostring(sliderY.Value)  -- Chuyển giá trị y thành chuỗi
-
-    -- Gửi yêu cầu script khi Auto Summon được bật
-    local args = {
-        [1] = xValue,
-        [2] = yValue,
-        [3] = {}
-    }
-
-    game:GetService("ReplicatedStorage").Remote.Server.Gambling.UnitsGacha:FireServer(unpack(args))
-
-    -- Kích hoạt lệnh "Selling"
-    local sellingArgs = {
-        [1] = "Selling"
-    }
-    game:GetService("ReplicatedStorage").Remote.Server.Gambling.UnitsGacha:FireServer(unpack(sellingArgs))
-end)
-
+    
 -- tab 3
 addTab("🔰Play")
 
