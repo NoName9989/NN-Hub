@@ -562,6 +562,57 @@ addTab("🌠Summon")
 
 local tab2Content = Tabs["🌠Summon"].Content
 
+-- Khởi tạo các đối tượng UI trong Tab 2
+local tab2 = Instance.new("Frame")
+tab2.Size = UDim2.new(0, 400, 0, 300)  -- Cài đặt kích thước của Tab 2
+tab2.Position = UDim2.new(0, 10, 0, 10)  -- Vị trí tab 2 trên giao diện
+
+-- Thanh trượt cho 'x'
+local sliderX = Instance.new("Slider")
+sliderX.Parent = tab2
+sliderX.Size = UDim2.new(0, 300, 0, 50)
+sliderX.Position = UDim2.new(0, 50, 0, 50)
+sliderX.MinValue = 0
+sliderX.MaxValue = 1  -- Chọn giữa Standard và Centered
+sliderX.Value = 0  -- Giá trị mặc định
+
+-- Thanh trượt cho 'y'
+local sliderY = Instance.new("Slider")
+sliderY.Parent = tab2
+sliderY.Size = UDim2.new(0, 300, 0, 50)
+sliderY.Position = UDim2.new(0, 50, 0, 150)
+sliderY.MinValue = 1
+sliderY.MaxValue = 10
+sliderY.Value = 1  -- Giá trị mặc định
+
+-- Nút "Auto Summon"
+local autoSummonButton = Instance.new("TextButton")
+autoSummonButton.Parent = tab2
+autoSummonButton.Size = UDim2.new(0, 150, 0, 50)
+autoSummonButton.Position = UDim2.new(0, 125, 0, 220)
+autoSummonButton.Text = "Auto Summon"
+autoSummonButton.BackgroundColor3 = Color3.fromRGB(0, 255, 0)  -- Màu nền của nút
+autoSummonButton.MouseButton1Click:Connect(function()
+    -- Lấy giá trị của các thanh trượt và đảm bảo giá trị là chuỗi
+    local xValue = sliderX.Value == 0 and "Standard" or "Centered"
+    local yValue = tostring(sliderY.Value)  -- Chuyển giá trị y thành chuỗi
+
+    -- Gửi yêu cầu script khi Auto Summon được bật
+    local args = {
+        [1] = xValue,
+        [2] = yValue,
+        [3] = {}
+    }
+
+    game:GetService("ReplicatedStorage").Remote.Server.Gambling.UnitsGacha:FireServer(unpack(args))
+
+    -- Kích hoạt lệnh "Selling"
+    local sellingArgs = {
+        [1] = "Selling"
+    }
+    game:GetService("ReplicatedStorage").Remote.Server.Gambling.UnitsGacha:FireServer(unpack(sellingArgs))
+end)
+
 -- tab 3
 addTab("🔰Play")
 
