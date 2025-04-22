@@ -408,16 +408,29 @@ addTab("stats")
 -- Gán nội dung vào tab "stats"
 local statsContent = Tabs["stats"].Content
 
+-- Thêm padding để nội dung không bị sát lề
+local padding = Instance.new("UIPadding")
+padding.PaddingLeft = UDim.new(0, 10)
+padding.PaddingRight = UDim.new(0, 10)
+padding.PaddingTop = UDim.new(0, 10)
+padding.Parent = statsContent
+
+-- Thêm layout để tự sắp xếp các phần tử dọc
+local layout = Instance.new("UIListLayout")
+layout.Padding = UDim.new(0, 8)
+layout.SortOrder = Enum.SortOrder.LayoutOrder
+layout.Parent = statsContent
+
 -- Tiêu đề tổng thể
 local statsTitle = Instance.new("TextLabel")
 statsTitle.Text = "THÔNG SỐ SERVER"
-statsTitle.Size = UDim2.new(1, -20, 0, 30)
-statsTitle.Position = UDim2.new(0, 10, 0, 10)
+statsTitle.Size = UDim2.new(1, 0, 0, 30)
 statsTitle.BackgroundTransparency = 1
 statsTitle.TextSize = 20
 statsTitle.Font = Enum.Font.GothamBold
 statsTitle.TextColor3 = Color3.fromRGB(30, 30, 30)
 statsTitle.TextXAlignment = Enum.TextXAlignment.Left
+statsTitle.LayoutOrder = 1
 statsTitle.Parent = statsContent
 
 local function createStatFrame(titleText, getValueFunc, yPos)
@@ -447,7 +460,7 @@ local function createStatFrame(titleText, getValueFunc, yPos)
 	end)
 end
 
-createStatFrame("Thời gian bật menu", function()
+createStatFrame("Thời gian khởi chạy", function()
 	local elapsed = math.floor(tick() - startTime)
 	local hours = math.floor(elapsed / 3600)
 	local minutes = math.floor((elapsed % 3600) / 60)
@@ -467,7 +480,7 @@ createStatFrame("Tên người dùng", function()
 	return game.Players.LocalPlayer.Name
 end, 200)
 
-createStatFrame("Thời gian hệ thống", function()
+createStatFrame("Thời gian", function()
 	return os.date("%H:%M:%S")
 end, 250)
 
