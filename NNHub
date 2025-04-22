@@ -613,10 +613,10 @@ addTab("🌠Summon")
 
 local tab2Content = Tabs["🌠Summon"].Content
 -- Tạo Dropdown cho "x" trong Tab 2
-createDropdown(tab2, {"Standard", "Centered"}, "Standard", UDim2.new(0, 200, 0, 40), UDim2.new(0, 50, 0, 250))
+createDropdown(tab2Content, {"Standard", "Centered"}, "Standard", UDim2.new(0, 200, 0, 40), UDim2.new(0, 50, 0, 250))
 
 -- Tạo Dropdown cho "y" trong Tab 2
-createDropdown(tab2, {"1", "10"}, "1", UDim2.new(0, 200, 0, 40), UDim2.new(0, 50, 0, 300))
+createDropdown(tab2Content, {"1", "10"}, "1", UDim2.new(0, 200, 0, 40), UDim2.new(0, 50, 0, 300))
 
 
     
