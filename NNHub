@@ -363,6 +363,6 @@ MainFrame.BackgroundTransparency = 0.25
 --	end
 --end)
 
-addTab("Tổng quan")
-addTab("Chức năng")
-addTab("Cài đặt")
+addTab("stats")
+addTab("summon")
+addTab("play")
