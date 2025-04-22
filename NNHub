@@ -127,6 +127,33 @@ RightPanel.CanvasSize = UDim2.new(0, 0, 0, 0)
 RightPanel.AutomaticCanvasSize = Enum.AutomaticSize.Y
 RightPanel.ScrollingDirection = Enum.ScrollingDirection.Y
 Instance.new("UICorner", RightPanel).CornerRadius = UDim.new(0, 8)
+-- Dòng chào mừng + hiệu ứng fade-in + glow
+local DefaultRightLabel = Instance.new("TextLabel")
+DefaultRightLabel.Name = "DefaultMessage"
+DefaultRightLabel.Parent = RightPanel
+DefaultRightLabel.Size = UDim2.new(1, -20, 1, -20)
+DefaultRightLabel.Position = UDim2.new(0, 10, 0, 10)
+DefaultRightLabel.BackgroundTransparency = 1
+DefaultRightLabel.Text = "Welcome to NNHUB"
+DefaultRightLabel.Font = Enum.Font.GothamBold
+DefaultRightLabel.TextSize = 20
+DefaultRightLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+DefaultRightLabel.TextStrokeTransparency = 0.6 -- 0 = rõ, 1 = ẩn
+DefaultRightLabel.TextStrokeColor3 = Color3.fromRGB(0, 0, 0) -- đen hoặc màu hơi xanh, tím, tuỳ style
+DefaultRightLabel.TextWrapped = true
+DefaultRightLabel.TextXAlignment = Enum.TextXAlignment.Center
+DefaultRightLabel.TextYAlignment = Enum.TextYAlignment.Center
+DefaultRightLabel.TextTransparency = 1  -- Bắt đầu mờ
+DefaultRightLabel.ZIndex = 1
+
+-- Hiệu ứng fade-in
+task.spawn(function()
+	for i = 1, 10 do
+		DefaultRightLabel.TextTransparency = 1 - i * 0.1
+		task.wait(0.03)
+	end
+	DefaultRightLabel.TextTransparency = 0
+end)
 
 local RightLayout = Instance.new("UIListLayout", RightPanel)
 RightLayout.Padding = UDim.new(0, 6)
@@ -371,21 +398,4 @@ addTab("summon")
 
 -- tab 3
 addTab("play")
-
--- Mặc định mở tab "stats"
-for name, t in pairs(Tabs) do
-	t.Content.Visible = (name == "stats")
-	t.Button.BackgroundColor3 = Color3.fromRGB(235, 235, 235)
-	local stroke = t.Button:FindFirstChild("HighlightStroke")
-	if stroke then
-		stroke.Transparency = 1
-	end
-end
-
-local selectedTab = Tabs["stats"]
-selectedTab.Button.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
-local selectedStroke = selectedTab.Button:FindFirstChild("HighlightStroke")
-if selectedStroke then
-	selectedStroke.Transparency = 0
-end
 
