@@ -356,11 +356,11 @@ for i = 1, 10 do
 end
 MainFrame.BackgroundTransparency = 0.25
 
-game:GetService("RunService").RenderStepped:Connect(function()
-	if not isMinimized and MainFrame.Visible then
-		MainFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
-	end
-end)
+-- game:GetService("RunService").RenderStepped:Connect(function()
+--	if not isMinimized and MainFrame.Visible then
+--		MainFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
+--	end
+--end)
 
 addTab("Tổng quan")
 addTab("Chức năng")
