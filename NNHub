@@ -215,23 +215,28 @@ local function addTab(tabName)
 
 	-- Click chuyển tab
 	tabButton.MouseButton1Click:Connect(function()
-		for name, t in pairs(Tabs) do
-			t.Content.Visible = (name == tabName)
-			t.Button.BackgroundColor3 = Color3.fromRGB(235, 235, 235)
-			local stroke = t.Button:FindFirstChild("HighlightStroke")
-			if stroke then
-				stroke.Transparency = 1
-			end
-		end		
-
-		-- Làm nổi bật tab đang chọn
-		tabButton.BackgroundColor3 = Color3.fromRGB(80, 80, 80) -- màu nhẹ, dễ nhìn
-		local selectedStroke = tabButton:FindFirstChild("HighlightStroke")
-		if selectedStroke then
-			selectedStroke.Transparency = 0
+	for name, t in pairs(Tabs) do
+		t.Content.Visible = (name == tabName)
+		t.Button.BackgroundColor3 = Color3.fromRGB(235, 235, 235)
+		local stroke = t.Button:FindFirstChild("HighlightStroke")
+		if stroke then
+			stroke.Transparency = 1
 		end
-	end)
-end
+	end
+
+	-- Ẩn dòng welcome nếu có
+	local welcomeText = RightPanel:FindFirstChild("DefaultMessage")
+	if welcomeText then
+		welcomeText.Visible = false
+	end
+
+	-- Làm nổi bật tab đang chọn
+	tabButton.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+	local selectedStroke = tabButton:FindFirstChild("HighlightStroke")
+	if selectedStroke then
+		selectedStroke.Transparency = 0
+	end
+end)
 
 -- Minimize button
 local MinBtn = Instance.new("TextButton")
