@@ -363,6 +363,14 @@ MainFrame.BackgroundTransparency = 0.25
 --	end
 --end)
 
+-- tab 1
 addTab("stats")
+
+task.wait(0.1)
+Tabs["stats"].Button:Activate() -- hoặc gọi :MouseButton1Click nếu cần mô phỏng click
+
+-- tab 2
 addTab("summon")
+
+-- tab 3
 addTab("play")
