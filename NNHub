@@ -372,6 +372,20 @@ addTab("summon")
 -- tab 3
 addTab("play")
 
-task.wait(0.1)
-Tabs["stats"].Button.MouseButton1Click:Fire()
+-- Mặc định mở tab "stats"
+for name, t in pairs(Tabs) do
+	t.Content.Visible = (name == "stats")
+	t.Button.BackgroundColor3 = Color3.fromRGB(235, 235, 235)
+	local stroke = t.Button:FindFirstChild("HighlightStroke")
+	if stroke then
+		stroke.Transparency = 1
+	end
+end
+
+local selectedTab = Tabs["stats"]
+selectedTab.Button.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+local selectedStroke = selectedTab.Button:FindFirstChild("HighlightStroke")
+if selectedStroke then
+	selectedStroke.Transparency = 0
+end
 
