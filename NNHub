@@ -405,6 +405,77 @@ MainFrame.BackgroundTransparency = 0.25
 --	end
 --end)
 
+-- Tạo thanh lựa chọn (Dropdown)
+local function createDropdown(parent, options, defaultOption, size, position)
+    -- Tạo Button chính cho Dropdown
+    local button = Instance.new("TextButton")
+    button.Text = defaultOption
+    button.Size = size or UDim2.new(0, 200, 0, 40)
+    button.Position = position or UDim2.new(0, 0, 0, 0)
+    button.BackgroundColor3 = Color3.fromRGB(200, 200, 200)
+    button.Font = Enum.Font.Gotham
+    button.TextSize = 14
+    button.TextColor3 = Color3.fromRGB(0, 0, 0)
+    button.Parent = parent
+
+    -- Tạo Frame chứa các lựa chọn (Dropdown)
+    local dropDownFrame = Instance.new("Frame")
+    dropDownFrame.Size = UDim2.new(0, 200, 0, 0)
+    dropDownFrame.Position = UDim2.new(0, 0, 1, 0)
+    dropDownFrame.BackgroundColor3 = Color3.fromRGB(240, 240, 240)
+    dropDownFrame.Visible = false
+    dropDownFrame.Parent = button
+
+    -- Thêm các lựa chọn vào Dropdown
+    for i, option in ipairs(options) do
+        local optionButton = Instance.new("TextButton")
+        optionButton.Text = option
+        optionButton.Size = UDim2.new(1, 0, 0, 40)
+        optionButton.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
+        optionButton.TextColor3 = Color3.fromRGB(0, 0, 0)
+        optionButton.Parent = dropDownFrame
+
+        -- Sự kiện chọn lựa
+        optionButton.MouseButton1Click:Connect(function()
+            button.Text = option
+            dropDownFrame.Visible = false
+        end)
+    end
+
+-- Tạo nút bật/tắt
+local function createToggleButton(parent, defaultState, size, position)
+    -- Tạo nút
+    local toggleButton = Instance.new("TextButton")
+    toggleButton.Size = size or UDim2.new(0, 200, 0, 40)
+    toggleButton.Position = position or UDim2.new(0, 0, 0, 0)
+    toggleButton.Text = defaultState and "ON" or "OFF"
+    toggleButton.BackgroundColor3 = Color3.fromRGB(200, 200, 200)
+    toggleButton.Font = Enum.Font.Gotham
+    toggleButton.TextSize = 14
+    toggleButton.TextColor3 = Color3.fromRGB(0, 0, 0)
+    toggleButton.Parent = parent
+
+    -- Trạng thái bật/tắt
+    local isActive = defaultState
+
+    -- Sự kiện khi nhấn vào nút
+    toggleButton.MouseButton1Click:Connect(function()
+        isActive = not isActive
+        toggleButton.Text = isActive and "ON" or "OFF"
+    end)
+
+    -- Trả về trạng thái
+    return function()
+        return isActive
+    end
+end
+
+    -- Tạo sự kiện khi nhấn vào button chính
+    button.MouseButton1Click:Connect(function()
+        dropDownFrame.Visible = not dropDownFrame.Visible
+    end)
+end
+
 local startTime = tick()
 
 -- tab 1
@@ -491,118 +562,18 @@ addTab("🌠Summon")
 
 local tab2Content = Tabs["🌠Summon"].Content
 
--- Tạo phần "x" với các tùy chọn Standard, Centered
-local xLabel = Instance.new("TextLabel")
-xLabel.Text = "X: Standard / Centered"
-xLabel.Size = UDim2.new(0, 300, 0, 30)
-xLabel.Position = UDim2.new(0, 10, 0, 10)
-xLabel.BackgroundTransparency = 1
-xLabel.TextSize = 14
-xLabel.Font = Enum.Font.Gotham
-xLabel.TextColor3 = Color3.fromRGB(30, 30, 30)
-xLabel.TextXAlignment = Enum.TextXAlignment.Left
-xLabel.Parent = tab2Content
+-- Tạo Dropdown cho lựa chọn "x"
+createDropdown(functionContent, {"Standard", "Centered"}, "Standard", UDim2.new(0, 200, 0, 40), UDim2.new(0, 0, 0, 0))
 
-local xOptions = Instance.new("TextButton")
-xOptions.Text = "Standard"
-xOptions.Size = UDim2.new(0, 200, 0, 30)
-xOptions.Position = UDim2.new(0, 10, 0, 50)
-xOptions.BackgroundColor3 = Color3.fromRGB(200, 200, 200)
-xOptions.TextColor3 = Color3.fromRGB(40, 40, 40)
-xOptions.Font = Enum.Font.Gotham
-xOptions.TextSize = 14
-xOptions.Parent = tab2Content
+-- Tạo nút Auto Summon
+local getAutoSummonState = createToggleButton(functionContent, false, UDim2.new(0, 200, 0, 40), UDim2.new(0, 0, 0, 60))
 
-local xValue = "Standard"  -- Giá trị mặc định cho x
-
-xOptions.MouseButton1Click:Connect(function()
-    if xValue == "Standard" then
-        xValue = "Centered"
-        xOptions.Text = "Centered"
-    else
-        xValue = "Standard"
-        xOptions.Text = "Standard"
-    end
-end)
-
--- Tạo phần "y" với giá trị 1 hoặc 10
-local yLabel = Instance.new("TextLabel")
-yLabel.Text = "Y: 1 or 10"
-yLabel.Size = UDim2.new(0, 300, 0, 30)
-yLabel.Position = UDim2.new(0, 10, 0, 100)
-yLabel.BackgroundTransparency = 1
-yLabel.TextSize = 14
-yLabel.Font = Enum.Font.Gotham
-yLabel.TextColor3 = Color3.fromRGB(30, 30, 30)
-yLabel.TextXAlignment = Enum.TextXAlignment.Left
-yLabel.Parent = tab2Content
-
-local yOptions = Instance.new("TextButton")
-yOptions.Text = "1"
-yOptions.Size = UDim2.new(0, 200, 0, 30)
-yOptions.Position = UDim2.new(0, 10, 0, 140)
-yOptions.BackgroundColor3 = Color3.fromRGB(200, 200, 200)
-yOptions.TextColor3 = Color3.fromRGB(40, 40, 40)
-yOptions.Font = Enum.Font.Gotham
-yOptions.TextSize = 14
-yOptions.Parent = tab2Content
-
-local yValue = 1  -- Giá trị mặc định cho y
-
-yOptions.MouseButton1Click:Connect(function()
-    if yValue == 1 then
-        yValue = 10
-        yOptions.Text = "10"
-    else
-        yValue = 1
-        yOptions.Text = "1"
-    end
-end)
-
--- Tạo nút "Auto Summon"
-local autoSummonButton = Instance.new("TextButton")
-autoSummonButton.Text = "Auto Summon: OFF"
-autoSummonButton.Size = UDim2.new(0, 200, 0, 40)
-autoSummonButton.Position = UDim2.new(0, 10, 0, 200)
-autoSummonButton.BackgroundColor3 = Color3.fromRGB(100, 200, 100)
-autoSummonButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-autoSummonButton.Font = Enum.Font.Gotham
-autoSummonButton.TextSize = 14
-autoSummonButton.Parent = tab2Content
-
-local autoSummonActive = false  -- Biến để kiểm tra trạng thái "Auto Summon"
-
-autoSummonButton.MouseButton1Click:Connect(function()
-    autoSummonActive = not autoSummonActive
-    if autoSummonActive then
-        autoSummonButton.Text = "Auto Summon: ON"
-    else
-        autoSummonButton.Text = "Auto Summon: OFF"
-    end
-end)
-
--- Tạo hàm để kích hoạt lệnh
-local function summonUnits()
-    local args = {
-        [1] = xValue,  -- Dùng giá trị x đã chọn
-        [2] = yValue,  -- Dùng giá trị y đã chọn
-        [3] = {}
-    }
-    
-    game:GetService("ReplicatedStorage").Remote.Server.Gambling.UnitsGacha:FireServer(unpack(args))
-
-    -- Kích hoạt bán
-    local args2 = {
-        [1] = "Selling"
-    }
-    
-    game:GetService("ReplicatedStorage").Remote.Server.Gambling.UnitsGacha:FireServer(unpack(args2))
-end
-
--- Kích hoạt tự động khi "Auto Summon" được bật
+-- Khi bật Auto Summon, thực hiện các hành động tự động
 while wait(1) do
-    if autoSummonActive then
-        summonUnits()
+    if getAutoSummonState() then
+        -- Gọi các hàm bạn muốn khi bật Auto Summon
+        print("Auto Summon is active!")
+        -- Gọi hàm kích hoạt summoning ở đây
     end
 end
 
