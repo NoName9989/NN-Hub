@@ -465,6 +465,10 @@ createStatFrame("Thời gian khởi chạy", function()
 	return string.format("%02d:%02d:%02d", hours, minutes, seconds)
 end, 200)
 
+createStatFrame("Tên người dùng", function()
+	return game.Players.LocalPlayer.Name
+end, 200)
+
 createStatFrame("FPS", function()
 	return tostring(math.floor(workspace:GetRealPhysicsFPS()))
 end, 50)
@@ -472,10 +476,6 @@ end, 50)
 createStatFrame("Place ID", function()
 	return tostring(game.PlaceId)
 end, 100)
-
-createStatFrame("Tên người dùng", function()
-	return game.Players.LocalPlayer.Name
-end, 200)
 
 createStatFrame("Thời gian", function()
 	return os.date("%H:%M:%S")
