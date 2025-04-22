@@ -201,18 +201,6 @@ local function addTab(tabName)
 	contentCorner.CornerRadius = UDim.new(0, 8)
 	contentCorner.Parent = contentFrame
 
-	-- Ví dụ nội dung trong tab (bạn có thể tùy chỉnh)
-	local label = Instance.new("TextLabel")
-	label.Size = UDim2.new(1, -20, 0, 30)
-	label.Position = UDim2.new(0, 10, 0, 10)
-	label.BackgroundTransparency = 1
-	label.Text = "Nội dung của tab: " .. tabName
-	label.TextColor3 = Color3.fromRGB(30, 30, 30)
-	label.Font = Enum.Font.Gotham
-	label.TextSize = 16
-	label.TextXAlignment = Enum.TextXAlignment.Left
-	label.Parent = contentFrame
-
 	-- Lưu tab
 	Tabs[tabName] = {
 		Button = tabButton,
