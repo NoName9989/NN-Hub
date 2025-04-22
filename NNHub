@@ -169,7 +169,7 @@ local function addTab(tabName)
 	tabButton.BackgroundColor3 = Color3.fromRGB(235, 235, 235)
 	tabButton.TextColor3 = Color3.fromRGB(40, 40, 40)
 	tabButton.Font = Enum.Font.Gotham
-	tabButton.TextSize = 8
+	tabButton.TextSize = 11
 	tabButton.TextScaled = false
 	tabButton.TextWrapped = false
         tabButton.TextXAlignment = Enum.TextXAlignment.Left
