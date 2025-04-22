@@ -195,18 +195,10 @@ local function addTab(tabName)
 			if stroke then
 				stroke.Transparency = 1
 			end
-		end
-
-		tabButton.BackgroundColor3 = Color3.fromRGB(200, 220, 255) -- màu tab đang chọn
-		local selectedStroke = tabButton:FindFirstChild("HighlightStroke")
-		if selectedStroke then
-			selectedStroke.Transparency = 0
-		end
-	end)
-end
+		end		
 
 		-- Làm nổi bật tab đang chọn
-		tabButton.BackgroundColor3 = Color3.fromRGB(200, 220, 255) -- màu nhẹ, dễ nhìn
+		tabButton.BackgroundColor3 = Color3.fromRGB(80, 80, 80) -- màu nhẹ, dễ nhìn
 		local selectedStroke = tabButton:FindFirstChild("HighlightStroke")
 		if selectedStroke then
 			selectedStroke.Transparency = 0
