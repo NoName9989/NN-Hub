@@ -139,23 +139,26 @@ local function addTab(tabName)
 	tabButton.Name = "TabButton_" .. tabName
 	tabButton.Text = tabName
 	tabButton.Size = UDim2.new(1, -10, 0, 40)
-	tabButton.BackgroundColor3 = Color3.fromRGB(210, 210, 210)
+	tabButton.BackgroundColor3 = Color3.fromRGB(240, 240, 240) -- màu nhẹ hơn
 	tabButton.TextColor3 = Color3.fromRGB(30, 30, 30)
 	tabButton.Font = Enum.Font.Gotham
 	tabButton.TextSize = 14
-	tabButton.TextScaled = true
-	tabButton.TextWrapped = true
+	tabButton.TextScaled = false -- KHÔNG scale chữ
+	tabButton.TextWrapped = false -- KHÔNG xuống dòng
 	tabButton.Parent = LeftPanel
 
-	-- Viền xung quanh tab (ẩn ban đầu)
+	-- Bo viền khung tab
+	local corner = Instance.new("UICorner")
+	corner.CornerRadius = UDim.new(0, 6)
+	corner.Parent = tabButton
+
+	-- Viền sáng khi được chọn (ẩn ban đầu)
 	local stroke = Instance.new("UIStroke")
 	stroke.Name = "HighlightStroke"
-	stroke.Color = Color3.fromRGB(120, 120, 255)
+	stroke.Color = Color3.fromRGB(80, 130, 255) -- màu nổi bật dịu
 	stroke.Thickness = 2
-	stroke.Transparency = 1
+	stroke.Transparency = 1 -- ẩn mặc định
 	stroke.Parent = tabButton
-
-	Instance.new("UICorner", tabButton).CornerRadius = UDim.new(0, 6)
 
 	-- Tạo frame nội dung bên phải
 	local contentFrame = Instance.new("Frame")
@@ -187,8 +190,8 @@ local function addTab(tabName)
 		for name, t in pairs(Tabs) do
 			t.Content.Visible = (name == tabName)
 
-			-- Reset màu và ẩn viền các tab khác
-			t.Button.BackgroundColor3 = Color3.fromRGB(210, 210, 210)
+			-- Reset màu và viền tab khác
+			t.Button.BackgroundColor3 = Color3.fromRGB(240, 240, 240)
 			local stroke = t.Button:FindFirstChild("HighlightStroke")
 			if stroke then
 				stroke.Transparency = 1
@@ -196,13 +199,14 @@ local function addTab(tabName)
 		end
 
 		-- Làm nổi bật tab đang chọn
-		tabButton.BackgroundColor3 = Color3.fromRGB(180, 180, 255)
+		tabButton.BackgroundColor3 = Color3.fromRGB(200, 220, 255) -- màu nhẹ, dễ nhìn
 		local selectedStroke = tabButton:FindFirstChild("HighlightStroke")
 		if selectedStroke then
 			selectedStroke.Transparency = 0
 		end
 	end)
 end
+
 -- Minimize button
 local MinBtn = Instance.new("TextButton")
 MinBtn.Parent = MainFrame
