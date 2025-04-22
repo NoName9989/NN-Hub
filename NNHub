@@ -166,46 +166,44 @@ local function addTab(tabName)
 	tabButton.Name = "TabButton_" .. tabName
 	tabButton.Text = tabName
 	tabButton.Size = UDim2.new(1, -10, 0, 40)
-	tabButton.BackgroundColor3 = Color3.fromRGB(235, 235, 235) -- màu dịu
+	tabButton.BackgroundColor3 = Color3.fromRGB(235, 235, 235)
 	tabButton.TextColor3 = Color3.fromRGB(40, 40, 40)
 	tabButton.Font = Enum.Font.Gotham
 	tabButton.TextSize = 14
-	tabButton.TextScaled = false -- KHÔNG scale chữ
-	tabButton.TextWrapped = false -- KHÔNG bo chữ, KHÔNG xuống dòng
-	tabButton.ClipsDescendants = true -- tránh bo chữ
+	tabButton.TextScaled = false
+	tabButton.TextWrapped = false
+	tabButton.ClipsDescendants = true
 	tabButton.Parent = LeftPanel
 
-	-- Bo góc khung tab (KHÔNG phải chữ)
 	local corner = Instance.new("UICorner")
 	corner.CornerRadius = UDim.new(0, 6)
 	corner.Parent = tabButton
 
-	-- Viền nổi bật khi được chọn
 	local stroke = Instance.new("UIStroke")
 	stroke.Name = "HighlightStroke"
-	stroke.Color = Color3.fromRGB(100, 150, 255) -- màu dịu nổi bật
+	stroke.Color = Color3.fromRGB(100, 150, 255)
 	stroke.Thickness = 2
-	stroke.Transparency = 1 -- ẩn mặc định
+	stroke.Transparency = 1
 	stroke.Parent = tabButton
 
-	-- Tạo frame nội dung bên phải
+	-- Clone frame giống menu (trừ LeftPanel)
+	local originalFrame = script.Parent:FindFirstChild("MainFrame")
 	local contentFrame = Instance.new("Frame")
 	contentFrame.Name = "Content_" .. tabName
-	contentFrame.Size = UDim2.new(1, -10, 0, 300)
-	contentFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	contentFrame.Size = UDim2.new(1, 0, 1, 0)
 	contentFrame.BackgroundTransparency = 1
-	contentFrame.BorderSizePixel = 0
 	contentFrame.Visible = false
+	contentFrame.BorderSizePixel = 0
 	contentFrame.Parent = RightPanel
 
-	local contentLabel = Instance.new("TextLabel")
-	contentLabel.Size = UDim2.new(1, 0, 1, 0)
-	contentLabel.Text = "Nội dung của tab: " .. tabName
-	contentLabel.Font = Enum.Font.Gotham
-	contentLabel.TextSize = 16
-	contentLabel.TextColor3 = Color3.fromRGB(50, 50, 50)
-	contentLabel.BackgroundTransparency = 1
-	contentLabel.Parent = contentFrame
+	local clone = originalFrame:Clone()
+	if clone:FindFirstChild("LeftPanel") then
+		clone.LeftPanel:Destroy()
+	end
+	clone.Name = "TabMenu_" .. tabName
+	clone.Position = UDim2.new(0, 0, 0, 0)
+	clone.Size = UDim2.new(1, 0, 1, 0)
+	clone.Parent = contentFrame
 
 	-- Lưu tab
 	Tabs[tabName] = {
@@ -215,28 +213,29 @@ local function addTab(tabName)
 
 	-- Click chuyển tab
 	tabButton.MouseButton1Click:Connect(function()
-	for name, t in pairs(Tabs) do
-		t.Content.Visible = (name == tabName)
-		t.Button.BackgroundColor3 = Color3.fromRGB(235, 235, 235)
-		local stroke = t.Button:FindFirstChild("HighlightStroke")
-		if stroke then
-			stroke.Transparency = 1
+		for name, t in pairs(Tabs) do
+			t.Content.Visible = (name == tabName)
+			t.Button.BackgroundColor3 = Color3.fromRGB(235, 235, 235)
+			local stroke = t.Button:FindFirstChild("HighlightStroke")
+			if stroke then
+				stroke.Transparency = 1
+			end
 		end
-	end
 
-	-- Ẩn dòng welcome nếu có
-	local welcomeText = RightPanel:FindFirstChild("DefaultMessage")
-	if welcomeText then
-		welcomeText.Visible = false
-	end
+		-- Ẩn dòng welcome nếu có
+		local welcomeText = RightPanel:FindFirstChild("DefaultMessage")
+		if welcomeText then
+			welcomeText.Visible = false
+		end
 
-	-- Làm nổi bật tab đang chọn
-	tabButton.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
-	local selectedStroke = tabButton:FindFirstChild("HighlightStroke")
-	if selectedStroke then
-		selectedStroke.Transparency = 0
-	end
-end)
+		-- Làm nổi bật tab đang chọn
+		tabButton.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+		local selectedStroke = tabButton:FindFirstChild("HighlightStroke")
+		if selectedStroke then
+			selectedStroke.Transparency = 0
+		end
+	end)
+end
 
 -- Minimize button
 local MinBtn = Instance.new("TextButton")
