@@ -489,6 +489,123 @@ end, 250)
 -- tab 2
 addTab("🌠Summon")
 
+local tab2Content = Tabs["🌠Summon"].Content
+
+-- Tạo phần "x" với các tùy chọn Standard, Centered
+local xLabel = Instance.new("TextLabel")
+xLabel.Text = "X: Standard / Centered"
+xLabel.Size = UDim2.new(0, 300, 0, 30)
+xLabel.Position = UDim2.new(0, 10, 0, 10)
+xLabel.BackgroundTransparency = 1
+xLabel.TextSize = 14
+xLabel.Font = Enum.Font.Gotham
+xLabel.TextColor3 = Color3.fromRGB(30, 30, 30)
+xLabel.TextXAlignment = Enum.TextXAlignment.Left
+xLabel.Parent = tab2Content
+
+local xOptions = Instance.new("TextButton")
+xOptions.Text = "Standard"
+xOptions.Size = UDim2.new(0, 200, 0, 30)
+xOptions.Position = UDim2.new(0, 10, 0, 50)
+xOptions.BackgroundColor3 = Color3.fromRGB(200, 200, 200)
+xOptions.TextColor3 = Color3.fromRGB(40, 40, 40)
+xOptions.Font = Enum.Font.Gotham
+xOptions.TextSize = 14
+xOptions.Parent = tab2Content
+
+local xValue = "Standard"  -- Giá trị mặc định cho x
+
+xOptions.MouseButton1Click:Connect(function()
+    if xValue == "Standard" then
+        xValue = "Centered"
+        xOptions.Text = "Centered"
+    else
+        xValue = "Standard"
+        xOptions.Text = "Standard"
+    end
+end)
+
+-- Tạo phần "y" với giá trị 1 hoặc 10
+local yLabel = Instance.new("TextLabel")
+yLabel.Text = "Y: 1 or 10"
+yLabel.Size = UDim2.new(0, 300, 0, 30)
+yLabel.Position = UDim2.new(0, 10, 0, 100)
+yLabel.BackgroundTransparency = 1
+yLabel.TextSize = 14
+yLabel.Font = Enum.Font.Gotham
+yLabel.TextColor3 = Color3.fromRGB(30, 30, 30)
+yLabel.TextXAlignment = Enum.TextXAlignment.Left
+yLabel.Parent = tab2Content
+
+local yOptions = Instance.new("TextButton")
+yOptions.Text = "1"
+yOptions.Size = UDim2.new(0, 200, 0, 30)
+yOptions.Position = UDim2.new(0, 10, 0, 140)
+yOptions.BackgroundColor3 = Color3.fromRGB(200, 200, 200)
+yOptions.TextColor3 = Color3.fromRGB(40, 40, 40)
+yOptions.Font = Enum.Font.Gotham
+yOptions.TextSize = 14
+yOptions.Parent = tab2Content
+
+local yValue = 1  -- Giá trị mặc định cho y
+
+yOptions.MouseButton1Click:Connect(function()
+    if yValue == 1 then
+        yValue = 10
+        yOptions.Text = "10"
+    else
+        yValue = 1
+        yOptions.Text = "1"
+    end
+end)
+
+-- Tạo nút "Auto Summon"
+local autoSummonButton = Instance.new("TextButton")
+autoSummonButton.Text = "Auto Summon: OFF"
+autoSummonButton.Size = UDim2.new(0, 200, 0, 40)
+autoSummonButton.Position = UDim2.new(0, 10, 0, 200)
+autoSummonButton.BackgroundColor3 = Color3.fromRGB(100, 200, 100)
+autoSummonButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+autoSummonButton.Font = Enum.Font.Gotham
+autoSummonButton.TextSize = 14
+autoSummonButton.Parent = tab2Content
+
+local autoSummonActive = false  -- Biến để kiểm tra trạng thái "Auto Summon"
+
+autoSummonButton.MouseButton1Click:Connect(function()
+    autoSummonActive = not autoSummonActive
+    if autoSummonActive then
+        autoSummonButton.Text = "Auto Summon: ON"
+    else
+        autoSummonButton.Text = "Auto Summon: OFF"
+    end
+end)
+
+-- Tạo hàm để kích hoạt lệnh
+local function summonUnits()
+    local args = {
+        [1] = xValue,  -- Dùng giá trị x đã chọn
+        [2] = yValue,  -- Dùng giá trị y đã chọn
+        [3] = {}
+    }
+    
+    game:GetService("ReplicatedStorage").Remote.Server.Gambling.UnitsGacha:FireServer(unpack(args))
+
+    -- Kích hoạt bán
+    local args2 = {
+        [1] = "Selling"
+    }
+    
+    game:GetService("ReplicatedStorage").Remote.Server.Gambling.UnitsGacha:FireServer(unpack(args2))
+end
+
+-- Kích hoạt tự động khi "Auto Summon" được bật
+while wait(1) do
+    if autoSummonActive then
+        summonUnits()
+    end
+end
+
 -- tab 3
 addTab("🔰Play")
 
