@@ -404,85 +404,70 @@ MainFrame.BackgroundTransparency = 0.25
 
 -- tab 1
 addTab("stats")
--- Tạo MainFrame cho giao diện chính
-local MainFrame = Instance.new("Frame")
-MainFrame.Name = "MainFrame"
-MainFrame.Size = UDim2.new(0.5, 0, 0.7, 0)
-MainFrame.Position = UDim2.new(0.25, 0, 0.15, 0)
-MainFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-MainFrame.Parent = game.Players.LocalPlayer.PlayerGui
 
--- Tạo tiêu đề tổng thể
-local Title = Instance.new("TextLabel")
-Title.Name = "Title"
-Title.Size = UDim2.new(1, 0, 0, 40)
-Title.Position = UDim2.new(0, 0, 0, 0)
-Title.Text = "Thông số Hệ thống"
-Title.TextSize = 20
-Title.Font = Enum.Font.GothamBold
-Title.TextColor3 = Color3.fromRGB(0, 0, 0)
-Title.BackgroundTransparency = 1
-Title.Parent = MainFrame
+-- Gán nội dung vào tab "stats"
+local statsContent = Tabs["stats"].Content
 
--- Tạo khung cho Place ID
-local PlaceIDFrame = Instance.new("Frame")
-PlaceIDFrame.Name = "PlaceIDFrame"
-PlaceIDFrame.Size = UDim2.new(1, -20, 0, 50)
-PlaceIDFrame.Position = UDim2.new(0, 10, 0, 50)
-PlaceIDFrame.BackgroundColor3 = Color3.fromRGB(240, 240, 240)
-PlaceIDFrame.Parent = MainFrame
+-- Tiêu đề tổng thể
+local statsTitle = Instance.new("TextLabel")
+statsTitle.Text = "THÔNG SỐ HỆ THỐNG"
+statsTitle.Size = UDim2.new(1, -20, 0, 30)
+statsTitle.Position = UDim2.new(0, 10, 0, 10)
+statsTitle.BackgroundTransparency = 1
+statsTitle.TextSize = 20
+statsTitle.Font = Enum.Font.GothamBold
+statsTitle.TextColor3 = Color3.fromRGB(30, 30, 30)
+statsTitle.TextXAlignment = Enum.TextXAlignment.Left
+statsTitle.Parent = statsContent
 
--- Nội dung cho Place ID
-local PlaceIDLabel = Instance.new("TextLabel")
-PlaceIDLabel.Name = "PlaceIDLabel"
-PlaceIDLabel.Size = UDim2.new(1, -20, 1, 0)
-PlaceIDLabel.Position = UDim2.new(0, 10, 0, 0)
-PlaceIDLabel.Text = "Place ID: 123456"
-PlaceIDLabel.TextSize = 16
-PlaceIDLabel.Font = Enum.Font.Gotham
-PlaceIDLabel.TextColor3 = Color3.fromRGB(0, 0, 0)
-PlaceIDLabel.BackgroundTransparency = 1
-PlaceIDLabel.Parent = PlaceIDFrame
+local function createStatFrame(titleText, getValueFunc, yPos)
+	local frame = Instance.new("Frame")
+	frame.Size = UDim2.new(1, -20, 0, 40)
+	frame.Position = UDim2.new(0, 10, 0, yPos)
+	frame.BackgroundColor3 = Color3.fromRGB(240, 240, 240)
+	frame.BackgroundTransparency = 0
+	frame.BorderSizePixel = 0
+	frame.Parent = statsContent
+	Instance.new("UICorner", frame)
 
--- Tạo khung cho FPS
-local FPSFrame = Instance.new("Frame")
-FPSFrame.Name = "FPSFrame"
-FPSFrame.Size = UDim2.new(1, -20, 0, 50)
-FPSFrame.Position = UDim2.new(0, 10, 0, 110)
-FPSFrame.BackgroundColor3 = Color3.fromRGB(240, 240, 240)
-FPSFrame.Parent = MainFrame
+	local label = Instance.new("TextLabel")
+	label.Size = UDim2.new(1, -10, 1, 0)
+	label.Position = UDim2.new(0, 10, 0, 0)
+	label.BackgroundTransparency = 1
+	label.Text = titleText .. ": " .. getValueFunc()
+	label.Font = Enum.Font.Gotham
+	label.TextSize = 16
+	label.TextXAlignment = Enum.TextXAlignment.Left
+	label.TextColor3 = Color3.fromRGB(50, 50, 50)
+	label.Parent = frame
 
--- Nội dung cho FPS
-local FPSLabel = Instance.new("TextLabel")
-FPSLabel.Name = "FPSLabel"
-FPSLabel.Size = UDim2.new(1, -20, 1, 0)
-FPSLabel.Position = UDim2.new(0, 10, 0, 0)
-FPSLabel.Text = "FPS: 60"
-FPSLabel.TextSize = 16
-FPSLabel.Font = Enum.Font.Gotham
-FPSLabel.TextColor3 = Color3.fromRGB(0, 0, 0)
-FPSLabel.BackgroundTransparency = 1
-FPSLabel.Parent = FPSFrame
+	-- Cập nhật realtime nếu cần
+	game:GetService("RunService").RenderStepped:Connect(function()
+		label.Text = titleText .. ": " .. getValueFunc()
+	end)
+end
 
--- Tạo khung cho các chức năng khác (Ví dụ, thời gian thực)
-local TimeFrame = Instance.new("Frame")
-TimeFrame.Name = "TimeFrame"
-TimeFrame.Size = UDim2.new(1, -20, 0, 50)
-TimeFrame.Position = UDim2.new(0, 10, 0, 170)
-TimeFrame.BackgroundColor3 = Color3.fromRGB(240, 240, 240)
-TimeFrame.Parent = MainFrame
+createStatFrame("FPS", function()
+	return tostring(math.floor(workspace:GetRealPhysicsFPS()))
+end, 50)
 
--- Nội dung cho Time
-local TimeLabel = Instance.new("TextLabel")
-TimeLabel.Name = "TimeLabel"
-TimeLabel.Size = UDim2.new(1, -20, 1, 0)
-TimeLabel.Position = UDim2.new(0, 10, 0, 0)
-TimeLabel.Text = "Thời gian: " .. os.date("%X")
-TimeLabel.TextSize = 16
-TimeLabel.Font = Enum.Font.Gotham
-TimeLabel.TextColor3 = Color3.fromRGB(0, 0, 0)
-TimeLabel.BackgroundTransparency = 1
-TimeLabel.Parent = TimeFrame
+createStatFrame("Place ID", function()
+	return tostring(game.PlaceId)
+end, 100)
+
+createStatFrame("Ping (ms)", function()
+	local stats = game:GetService("Stats"):FindFirstChild("Network") or {}
+	return stats:GetAttribute("Data Ping") or "..."
+end, 150)
+
+createStatFrame("Tên người dùng", function()
+	return game.Players.LocalPlayer.Name
+end, 200)
+
+createStatFrame("Thời gian hệ thống", function()
+	return os.date("%H:%M:%S")
+end, 250)
+
 -- tab 2
 addTab("summon")
 
