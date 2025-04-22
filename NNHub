@@ -405,6 +405,97 @@ MainFrame.BackgroundTransparency = 0.25
 -- tab 1
 addTab("stats")
 
+-- Tạo một khung tổng thể cho giao diện (MainFrame)
+local MainFrame = Instance.new("Frame")
+MainFrame.Parent = game.Players.LocalPlayer.PlayerGui
+MainFrame.Size = UDim2.new(0.5, 0, 0.5, 0)
+MainFrame.Position = UDim2.new(0.25, 0, 0.25, 0)
+MainFrame.BackgroundColor3 = Color3.fromRGB(245, 245, 245)
+
+-- Tạo một tiêu đề tổng thể cho các chức năng
+local FunctionalityLabel = Instance.new("TextLabel")
+FunctionalityLabel.Parent = MainFrame
+FunctionalityLabel.Size = UDim2.new(1, 0, 0, 50)
+FunctionalityLabel.Text = "Các Chức Năng"
+FunctionalityLabel.Font = Enum.Font.GothamBold
+FunctionalityLabel.TextSize = 24
+FunctionalityLabel.TextColor3 = Color3.fromRGB(30, 30, 30)
+FunctionalityLabel.TextXAlignment = Enum.TextXAlignment.Center
+FunctionalityLabel.TextYAlignment = Enum.TextYAlignment.Center
+FunctionalityLabel.BackgroundTransparency = 1
+
+-- Chức năng 1: Thông số
+local StatsLabel = Instance.new("TextLabel")
+StatsLabel.Parent = MainFrame
+StatsLabel.Size = UDim2.new(1, 0, 0, 50)
+StatsLabel.Position = UDim2.new(0, 0, 0, 60)
+StatsLabel.Text = "Thông Số"
+StatsLabel.Font = Enum.Font.GothamBold
+StatsLabel.TextSize = 20
+StatsLabel.TextColor3 = Color3.fromRGB(30, 30, 30)
+StatsLabel.TextXAlignment = Enum.TextXAlignment.Center
+StatsLabel.TextYAlignment = Enum.TextYAlignment.Center
+StatsLabel.BackgroundTransparency = 1
+
+local StatsContent = Instance.new("TextLabel")
+StatsContent.Parent = MainFrame
+StatsContent.Size = UDim2.new(1, -20, 0, 150)
+StatsContent.Position = UDim2.new(0, 10, 0, 110)
+StatsContent.Text = "Chi tiết thông số sẽ hiển thị ở đây."
+StatsContent.TextColor3 = Color3.fromRGB(30, 30, 30)
+StatsContent.Font = Enum.Font.Gotham
+StatsContent.TextSize = 16
+StatsContent.TextXAlignment = Enum.TextXAlignment.Left
+StatsContent.BackgroundTransparency = 1
+
+-- Chức năng 2: Summon
+local SummonLabel = Instance.new("TextLabel")
+SummonLabel.Parent = MainFrame
+SummonLabel.Size = UDim2.new(1, 0, 0, 50)
+SummonLabel.Position = UDim2.new(0, 0, 0, 270)
+SummonLabel.Text = "Summon"
+SummonLabel.Font = Enum.Font.GothamBold
+SummonLabel.TextSize = 20
+SummonLabel.TextColor3 = Color3.fromRGB(30, 30, 30)
+SummonLabel.TextXAlignment = Enum.TextXAlignment.Center
+SummonLabel.TextYAlignment = Enum.TextYAlignment.Center
+SummonLabel.BackgroundTransparency = 1
+
+local SummonContent = Instance.new("TextLabel")
+SummonContent.Parent = MainFrame
+SummonContent.Size = UDim2.new(1, -20, 0, 150)
+SummonContent.Position = UDim2.new(0, 10, 0, 320)
+SummonContent.Text = "Chi tiết summon sẽ hiển thị ở đây."
+SummonContent.TextColor3 = Color3.fromRGB(30, 30, 30)
+SummonContent.Font = Enum.Font.Gotham
+SummonContent.TextSize = 16
+SummonContent.TextXAlignment = Enum.TextXAlignment.Left
+SummonContent.BackgroundTransparency = 1
+
+-- Chức năng 3: Play
+local PlayLabel = Instance.new("TextLabel")
+PlayLabel.Parent = MainFrame
+PlayLabel.Size = UDim2.new(1, 0, 0, 50)
+PlayLabel.Position = UDim2.new(0, 0, 0, 480)
+PlayLabel.Text = "Play"
+PlayLabel.Font = Enum.Font.GothamBold
+PlayLabel.TextSize = 20
+PlayLabel.TextColor3 = Color3.fromRGB(30, 30, 30)
+PlayLabel.TextXAlignment = Enum.TextXAlignment.Center
+PlayLabel.TextYAlignment = Enum.TextYAlignment.Center
+PlayLabel.BackgroundTransparency = 1
+
+local PlayContent = Instance.new("TextLabel")
+PlayContent.Parent = MainFrame
+PlayContent.Size = UDim2.new(1, -20, 0, 150)
+PlayContent.Position = UDim2.new(0, 10, 0, 530)
+PlayContent.Text = "Chi tiết play sẽ hiển thị ở đây."
+PlayContent.TextColor3 = Color3.fromRGB(30, 30, 30)
+PlayContent.Font = Enum.Font.Gotham
+PlayContent.TextSize = 16
+PlayContent.TextXAlignment = Enum.TextXAlignment.Left
+PlayContent.BackgroundTransparency = 1
+
 -- tab 2
 addTab("summon")
 
