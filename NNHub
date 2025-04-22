@@ -640,13 +640,72 @@ end, 250)
 addTab("🌠Summon")
 
 local tab2Content = Tabs["🌠Summon"].Content
--- Tạo Dropdown cho "x" trong Tab 2
-createDropdown(tab2Content, {"Standard", "Centered"}, "Standard", UDim2.new(0, 200, 0, 40), UDim2.new(0, 50, 0, 250))
+-- Dropdown chọn X
+local selectedX = "Standard"
+createDropdown(tab2Content, {"Standard", "Centered"}, selectedX, UDim2.new(0, 200, 0, 40), UDim2.new(0, 10, 0, 10))
+-- lưu text lại sau khi chọn
+local function getX()
+    return selectedX
+end
 
--- Tạo Dropdown cho "y" trong Tab 2
-createDropdown(tab2Content, {"1", "10"}, "1", UDim2.new(0, 200, 0, 40), UDim2.new(0, 50, 0, 300))
+-- Dropdown chọn Y
+local selectedY = "1"
+createDropdown(tab2Content, {"1", "10"}, selectedY, UDim2.new(0, 200, 0, 40), UDim2.new(0, 10, 0, 60))
+-- lưu text lại sau khi chọn
+local function getY()
+    return selectedY
+end
 
+-- Auto cập nhật khi chọn
+local function makeDropdown(parent, list, default, pos, setter)
+    local current = default
+    createDropdown(parent, list, default, UDim2.new(0, 200, 0, 40), pos)
+    local btn = parent:GetChildren()[#parent:GetChildren() - 1]
+    btn.MouseButton1Click:Connect(function()
+        wait(0.1)
+        for _, child in ipairs(btn:GetChildren()) do
+            if child:IsA("Frame") then
+                for _, opt in ipairs(child:GetChildren()) do
+                    if opt:IsA("TextButton") then
+                        opt.MouseButton1Click:Connect(function()
+                            current = opt.Text
+                            setter(current)
+                        end)
+                    end
+                end
+            end
+        end
+    end)
+end
 
+-- Dùng hàm custom để đảm bảo giữ giá trị
+makeDropdown(tab2Content, {"Standard", "Centered"}, "Standard", UDim2.new(0, 10, 0, 10), function(v) selectedX = v end)
+makeDropdown(tab2Content, {"1", "10"}, "1", UDim2.new(0, 10, 0, 60), function(v) selectedY = v end)
+
+-- Auto Summon Toggle
+local auto = false
+createToggleButton(tab2Content, false, UDim2.new(0, 60, 0, 30), UDim2.new(0, 10, 0, 110))
+local toggle = tab2Content:GetChildren()[#tab2Content:GetChildren()]
+toggle.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        auto = not auto
+    end
+end)
+
+-- Auto summon loop
+task.spawn(function()
+    while true do
+        task.wait(1)
+        if auto then
+            local args = {
+                [1] = tostring(selectedX),
+                [2] = tostring(selectedY),
+                [3] = {}
+            }
+            game:GetService("ReplicatedStorage").Remote.Server.Gambling.UnitsGacha:FireServer(unpack(args))
+        end
+    end
+end)
     
 -- tab 3
 addTab("🔰Play")
