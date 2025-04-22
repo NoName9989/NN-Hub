@@ -404,24 +404,22 @@ local startTime = tick()
 
 -- tab 1
 addTab("stats")
-
--- Gán nội dung vào tab "stats"
 local statsContent = Tabs["stats"].Content
 
--- Thêm padding để nội dung không bị sát lề
+-- Thêm padding vào trước
 local padding = Instance.new("UIPadding")
 padding.PaddingLeft = UDim.new(0, 10)
 padding.PaddingRight = UDim.new(0, 10)
 padding.PaddingTop = UDim.new(0, 10)
 padding.Parent = statsContent
 
--- Thêm layout để tự sắp xếp các phần tử dọc
+-- Thêm layout trước
 local layout = Instance.new("UIListLayout")
 layout.Padding = UDim.new(0, 8)
 layout.SortOrder = Enum.SortOrder.LayoutOrder
 layout.Parent = statsContent
 
--- Tiêu đề tổng thể
+-- Rồi mới thêm tiêu đề
 local statsTitle = Instance.new("TextLabel")
 statsTitle.Text = "THÔNG SỐ SERVER"
 statsTitle.Size = UDim2.new(1, 0, 0, 30)
@@ -430,7 +428,6 @@ statsTitle.TextSize = 20
 statsTitle.Font = Enum.Font.GothamBold
 statsTitle.TextColor3 = Color3.fromRGB(30, 30, 30)
 statsTitle.TextXAlignment = Enum.TextXAlignment.Left
-statsTitle.LayoutOrder = 1
 statsTitle.Parent = statsContent
 
 local function createStatFrame(titleText, getValueFunc, yPos)
