@@ -161,55 +161,59 @@ RightLayout.SortOrder = Enum.SortOrder.LayoutOrder
 local Tabs = {} -- bảng lưu tab và nội dung
 
 local function addTab(tabName)
-	-- Tạo nút tab bên trái
-	local tabButton = Instance.new("TextButton")
-	tabButton.Name = "TabButton_" .. tabName
-	tabButton.Text = tabName
-	tabButton.Size = UDim2.new(1, -10, 0, 40)
-	tabButton.BackgroundColor3 = Color3.fromRGB(235, 235, 235)
-	tabButton.TextColor3 = Color3.fromRGB(40, 40, 40)
-	tabButton.Font = Enum.Font.Gotham
-	tabButton.TextSize = 14
-	tabButton.TextScaled = false
-	tabButton.TextWrapped = false
-	tabButton.ClipsDescendants = true
-	tabButton.Parent = LeftPanel
+    -- Tạo nút tab bên trái
+    local tabButton = Instance.new("TextButton")
+    tabButton.Name = "TabButton_" .. tabName
+    tabButton.Text = tabName
+    tabButton.Size = UDim2.new(1, -10, 0, 40)
+    tabButton.BackgroundColor3 = Color3.fromRGB(235, 235, 235)
+    tabButton.TextColor3 = Color3.fromRGB(40, 40, 40)
+    tabButton.Font = Enum.Font.Gotham
+    tabButton.TextSize = 14  -- Cỡ chữ của tab
+    tabButton.TextScaled = false
+    tabButton.TextWrapped = true  -- Cho phép tự động xuống dòng nếu chữ dài
+    tabButton.TextXAlignment = Enum.TextXAlignment.Left  -- Căn trái
+    tabButton.ClipsDescendants = true
+    tabButton.Parent = LeftPanel
 
-	local corner = Instance.new("UICorner")
-	corner.CornerRadius = UDim.new(0, 6)
-	corner.Parent = tabButton
+    -- Tạo góc bo cho nút tab
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 6)
+    corner.Parent = tabButton
 
-	local stroke = Instance.new("UIStroke")
-	stroke.Name = "HighlightStroke"
-	stroke.Color = Color3.fromRGB(100, 150, 255)
-	stroke.Thickness = 2
-	stroke.Transparency = 1
-	stroke.Parent = tabButton
+    -- Tạo viền cho nút tab
+    local stroke = Instance.new("UIStroke")
+    stroke.Name = "HighlightStroke"
+    stroke.Color = Color3.fromRGB(100, 150, 255)
+    stroke.Thickness = 2
+    stroke.Transparency = 1
+    stroke.Parent = tabButton
 
-	-- Tạo Frame nội dung cho tab (giống Frame (8), trừ LeftPanel)
-	-- Tạo ScrollingFrame nội dung cho tab
-local contentFrame = Instance.new("ScrollingFrame")
-contentFrame.Name = "Content_" .. tabName
-contentFrame.Size = UDim2.new(1, 0, 1, 0)
-contentFrame.Position = UDim2.new(0, 0, 0, 0)
-contentFrame.BackgroundColor3 = Color3.fromRGB(245, 245, 245)
-contentFrame.BackgroundTransparency = 0
-contentFrame.BorderSizePixel = 0
-contentFrame.Visible = false
-contentFrame.ScrollBarThickness = 6
-contentFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
-contentFrame.AutomaticCanvasSize = Enum.AutomaticSize.Y
-contentFrame.ScrollingDirection = Enum.ScrollingDirection.Y
-contentFrame.Parent = RightPanel
+    -- Tạo ScrollingFrame nội dung cho tab
+    local contentFrame = Instance.new("ScrollingFrame")
+    contentFrame.Name = "Content_" .. tabName
+    contentFrame.Size = UDim2.new(1, 0, 1, 0)
+    contentFrame.Position = UDim2.new(0, 0, 0, 0)
+    contentFrame.BackgroundColor3 = Color3.fromRGB(245, 245, 245)
+    contentFrame.BackgroundTransparency = 0
+    contentFrame.BorderSizePixel = 0
+    contentFrame.Visible = false
+    contentFrame.ScrollBarThickness = 6
+    contentFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
+    contentFrame.AutomaticCanvasSize = Enum.AutomaticSize.Y
+    contentFrame.ScrollingDirection = Enum.ScrollingDirection.Y
+    contentFrame.Parent = RightPanel
 
--- Layout cho các frame chức năng
-local layout = Instance.new("UIListLayout", contentFrame)
-layout.Padding = UDim.new(0, 8)
-layout.SortOrder = Enum.SortOrder.LayoutOrder
+    -- Layout cho các frame chức năng
+    local layout = Instance.new("UIListLayout", contentFrame)
+    layout.Padding = UDim.new(0, 8)
+    layout.SortOrder = Enum.SortOrder.LayoutOrder
 
-	local contentCorner = Instance.new("UICorner")
-	contentCorner.CornerRadius = UDim.new(0, 8)
-	contentCorner.Parent = contentFrame
+    -- Góc bo cho nội dung frame
+    local contentCorner = Instance.new("UICorner")
+    contentCorner.CornerRadius = UDim.new(0, 8)
+    contentCorner.Parent = contentFrame
+end
 
 	-- Lưu tab
 	Tabs[tabName] = {
