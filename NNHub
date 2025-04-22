@@ -373,5 +373,5 @@ addTab("summon")
 addTab("play")
 
 task.wait(0.1)
-Tabs["stats"].Button:Activate() -- hoặc gọi :MouseButton1Click nếu cần mô phỏng click
+Tabs["stats"].Button.MouseButton1Click:Fire()
 
