@@ -400,6 +400,8 @@ MainFrame.BackgroundTransparency = 0.25
 --	end
 --end)
 
+local startTime = tick()
+
 -- tab 1
 addTab("stats")
 
@@ -445,6 +447,14 @@ local function createStatFrame(titleText, getValueFunc, yPos)
 	end)
 end
 
+createStatFrame("Thời gian bật menu", function()
+	local elapsed = math.floor(tick() - startTime)
+	local hours = math.floor(elapsed / 3600)
+	local minutes = math.floor((elapsed % 3600) / 60)
+	local seconds = elapsed % 60
+	return string.format("%02d:%02d:%02d", hours, minutes, seconds)
+end, 200)
+
 createStatFrame("FPS", function()
 	return tostring(math.floor(workspace:GetRealPhysicsFPS()))
 end, 50)
@@ -452,38 +462,6 @@ end, 50)
 createStatFrame("Place ID", function()
 	return tostring(game.PlaceId)
 end, 100)
-
-local startTime = tick() -- thời gian mở menu
-
-local PingFrame = Instance.new("Frame")
-PingFrame.Name = "UptimeFrame"
-PingFrame.Size = UDim2.new(1, -20, 0, 40)
-PingFrame.BackgroundColor3 = Color3.fromRGB(240, 240, 240)
-PingFrame.BackgroundTransparency = 0.3
-PingFrame.BorderSizePixel = 0
-PingFrame.Parent = contentFrame
-
-Instance.new("UICorner", PingFrame)
-
-local PingLabel = Instance.new("TextLabel")
-PingLabel.Size = UDim2.new(1, -20, 1, 0)
-PingLabel.Position = UDim2.new(0, 10, 0, 0)
-PingLabel.BackgroundTransparency = 1
-PingLabel.Text = "Đã bật menu được: 0 giây"
-PingLabel.Font = Enum.Font.Gotham
-PingLabel.TextSize = 16
-PingLabel.TextColor3 = Color3.fromRGB(30, 30, 30)
-PingLabel.TextXAlignment = Enum.TextXAlignment.Left
-PingLabel.Parent = PingFrame
-
--- Cập nhật liên tục
-task.spawn(function()
-	while PingLabel.Parent do
-		local elapsed = math.floor(tick() - startTime)
-		PingLabel.Text = "Đã bật menu được: " .. elapsed .. " giây"
-		task.wait(1)
-	end
-end)
 
 createStatFrame("Tên người dùng", function()
 	return game.Players.LocalPlayer.Name
