@@ -562,21 +562,6 @@ addTab("🌠Summon")
 
 local tab2Content = Tabs["🌠Summon"].Content
 
--- Tạo Dropdown cho lựa chọn "x"
-createDropdown(functionContent, {"Standard", "Centered"}, "Standard", UDim2.new(0, 200, 0, 40), UDim2.new(0, 0, 0, 0))
-
--- Tạo nút Auto Summon
-local getAutoSummonState = createToggleButton(functionContent, false, UDim2.new(0, 200, 0, 40), UDim2.new(0, 0, 0, 60))
-
--- Khi bật Auto Summon, thực hiện các hành động tự động
-while wait(1) do
-    if getAutoSummonState() then
-        -- Gọi các hàm bạn muốn khi bật Auto Summon
-        print("Auto Summon is active!")
-        -- Gọi hàm kích hoạt summoning ở đây
-    end
-end
-
 -- tab 3
 addTab("🔰Play")
 
