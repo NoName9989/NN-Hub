@@ -138,12 +138,14 @@ local function addTab(tabName)
 	local tabButton = Instance.new("TextButton")
 	tabButton.Name = "TabButton_" .. tabName
 	tabButton.Text = tabName
-	tabButton.Size = UDim2.new(1, -10, 0, 40)
-	tabButton.BackgroundColor3 = Color3.fromRGB(210, 210, 210)
-	tabButton.TextColor3 = Color3.fromRGB(30, 30, 30)
-	tabButton.Font = Enum.Font.Gotham
-	tabButton.TextSize = 14
-	tabButton.Parent = LeftPanel
+        tabButton.Size = UDim2.new(1, -10, 0, 40)
+        tabButton.BackgroundColor3 = Color3.fromRGB(210, 210, 210)
+        tabButton.TextColor3 = Color3.fromRGB(30, 30, 30)
+        tabButton.Font = Enum.Font.Gotham
+        tabButton.TextSize = 14 -- Vẫn nên giữ 1 size mặc định
+        tabButton.TextScaled = true
+        tabButton.TextWrapped = true
+        tabButton.Parent = LeftPanel
 	Instance.new("UICorner", tabButton).CornerRadius = UDim.new(0, 6)
 
 	-- Tạo frame nội dung bên phải
