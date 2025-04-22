@@ -187,15 +187,25 @@ local function addTab(tabName)
 	stroke.Parent = tabButton
 
 	-- Tạo Frame nội dung cho tab (giống Frame (8), trừ LeftPanel)
-	local contentFrame = Instance.new("Frame")
-	contentFrame.Name = "Content_" .. tabName
-	contentFrame.Size = UDim2.new(1, 0, 1, 0)
-	contentFrame.Position = UDim2.new(0, 0, 0, 0)
-	contentFrame.BackgroundColor3 = Color3.fromRGB(245, 245, 245) -- màu giống main frame
-	contentFrame.BackgroundTransparency = 0
-	contentFrame.BorderSizePixel = 0
-	contentFrame.Visible = false
-	contentFrame.Parent = RightPanel
+	-- Tạo ScrollingFrame nội dung cho tab
+local contentFrame = Instance.new("ScrollingFrame")
+contentFrame.Name = "Content_" .. tabName
+contentFrame.Size = UDim2.new(1, 0, 1, 0)
+contentFrame.Position = UDim2.new(0, 0, 0, 0)
+contentFrame.BackgroundColor3 = Color3.fromRGB(245, 245, 245)
+contentFrame.BackgroundTransparency = 0
+contentFrame.BorderSizePixel = 0
+contentFrame.Visible = false
+contentFrame.ScrollBarThickness = 6
+contentFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
+contentFrame.AutomaticCanvasSize = Enum.AutomaticSize.Y
+contentFrame.ScrollingDirection = Enum.ScrollingDirection.Y
+contentFrame.Parent = RightPanel
+
+-- Layout cho các frame chức năng
+local layout = Instance.new("UIListLayout", contentFrame)
+layout.Padding = UDim.new(0, 8)
+layout.SortOrder = Enum.SortOrder.LayoutOrder
 
 	local contentCorner = Instance.new("UICorner")
 	contentCorner.CornerRadius = UDim.new(0, 8)
