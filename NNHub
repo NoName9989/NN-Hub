@@ -197,7 +197,7 @@ local function addTab(tabName)
     contentFrame.BackgroundColor3 = Color3.fromRGB(245, 245, 245)
     contentFrame.BackgroundTransparency = 0
     contentFrame.BorderSizePixel = 0
-    contentFrame.Visible = false
+    contentFrame.Visible = false  -- Ẩn khi chưa được chọn
     contentFrame.ScrollBarThickness = 6
     contentFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
     contentFrame.AutomaticCanvasSize = Enum.AutomaticSize.Y
@@ -213,6 +213,19 @@ local function addTab(tabName)
     local contentCorner = Instance.new("UICorner")
     contentCorner.CornerRadius = UDim.new(0, 8)
     contentCorner.Parent = contentFrame
+
+    -- Thêm sự kiện khi nhấn vào tab để hiển thị nội dung tương ứng
+    tabButton.MouseButton1Click:Connect(function()
+        -- Ẩn tất cả các tab content trước khi hiển thị tab hiện tại
+        for _, content in pairs(RightPanel:GetChildren()) do
+            if content:IsA("ScrollingFrame") then
+                content.Visible = false
+            end
+        end
+        
+        -- Hiển thị nội dung của tab được chọn
+        contentFrame.Visible = true
+    end)
 end
 
 	-- Lưu tab
