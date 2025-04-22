@@ -408,8 +408,8 @@ MainFrame.BackgroundTransparency = 0.25
 local startTime = tick()
 
 -- tab 1
-addTab("stats")
-local statsContent = Tabs["stats"].Content
+addTab("❗️Status")
+local statsContent = Tabs["❗️Status"].Content
 
 -- Thêm padding vào trước
 local padding = Instance.new("UIPadding")
@@ -487,8 +487,8 @@ createStatFrame("Thời gian", function()
 end, 250)
 
 -- tab 2
-addTab("summon")
+addTab("🌠Summon")
 
 -- tab 3
-addTab("play")
+addTab("🔰Play")
 
