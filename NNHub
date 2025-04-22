@@ -456,6 +456,13 @@ local function createDropdown(parent, options, defaultOption, size, position)
     end)
 end
 
+local function wrapInGlass(frame)
+    frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    frame.BackgroundTransparency = 0.25
+    frame.BorderSizePixel = 0
+    Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 8)
+end
+
 local function createToggleButton(parent, defaultState, size, position)
     local toggle = Instance.new("Frame")
     toggle.Size = size or UDim2.new(0, 60, 0, 30)
@@ -640,71 +647,96 @@ end, 250)
 addTab("🌠Summon")
 
 local tab2Content = Tabs["🌠Summon"].Content
+local layout = Instance.new("UIListLayout", tab2Content)
+layout.Padding = UDim.new(0, 8)
+layout.SortOrder = Enum.SortOrder.LayoutOrder
+
+local padding = Instance.new("UIPadding", tab2Content)
+padding.PaddingLeft = UDim.new(0, 10)
+padding.PaddingRight = UDim.new(0, 10)
+padding.PaddingTop = UDim.new(0, 10)
 -- Dropdown chọn X
 local selectedX = "Standard"
-createDropdown(tab2Content, {"Standard", "Centered"}, selectedX, UDim2.new(0, 200, 0, 40), UDim2.new(0, 10, 0, 10))
--- lưu text lại sau khi chọn
-local function getX()
-    return selectedX
-end
-
--- Dropdown chọn Y
 local selectedY = "1"
-createDropdown(tab2Content, {"1", "10"}, selectedY, UDim2.new(0, 200, 0, 40), UDim2.new(0, 10, 0, 60))
--- lưu text lại sau khi chọn
-local function getY()
-    return selectedY
-end
 
--- Auto cập nhật khi chọn
-local function makeDropdown(parent, list, default, pos, setter)
-    local current = default
-    createDropdown(parent, list, default, UDim2.new(0, 200, 0, 40), pos)
-    local btn = parent:GetChildren()[#parent:GetChildren() - 1]
-    btn.MouseButton1Click:Connect(function()
-        wait(0.1)
-        for _, child in ipairs(btn:GetChildren()) do
-            if child:IsA("Frame") then
-                for _, opt in ipairs(child:GetChildren()) do
-                    if opt:IsA("TextButton") then
-                        opt.MouseButton1Click:Connect(function()
-                            current = opt.Text
-                            setter(current)
-                        end)
-                    end
-                end
-            end
-        end
-    end)
-end
+local xHolder = Instance.new("Frame")
+xHolder.Size = UDim2.new(1, 0, 0, 40)
+xHolder.Parent = tab2Content
+wrapInGlass(xHolder)
 
--- Dùng hàm custom để đảm bảo giữ giá trị
-makeDropdown(tab2Content, {"Standard", "Centered"}, "Standard", UDim2.new(0, 10, 0, 10), function(v) selectedX = v end)
-makeDropdown(tab2Content, {"1", "10"}, "1", UDim2.new(0, 10, 0, 60), function(v) selectedY = v end)
+local xDropdown = Instance.new("TextButton")
+xDropdown.Size = UDim2.new(1, -10, 1, -10)
+xDropdown.Position = UDim2.new(0, 5, 0, 5)
+xDropdown.Text = selectedX
+xDropdown.Parent = xHolder
+xDropdown.Font = Enum.Font.Gotham
+xDropdown.TextSize = 14
+xDropdown.TextColor3 = Color3.fromRGB(30,30,30)
+xDropdown.BackgroundTransparency = 1
 
--- Auto Summon Toggle
-local auto = false
-createToggleButton(tab2Content, false, UDim2.new(0, 60, 0, 30), UDim2.new(0, 10, 0, 110))
-local toggle = tab2Content:GetChildren()[#tab2Content:GetChildren()]
-toggle.InputBegan:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 then
-        auto = not auto
-    end
+-- Dropdown xử lý (hiện các lựa chọn)
+xDropdown.MouseButton1Click:Connect(function()
+	local menu = Instance.new("Frame")
+	menu.Size = UDim2.new(1, 0, 0, 70)
+	menu.Position = UDim2.new(0, 0, 1, 0)
+	menu.BackgroundColor3 = Color3.fromRGB(240, 240, 240)
+	menu.BorderSizePixel = 0
+	menu.ZIndex = 5
+	wrapInGlass(menu)
+	menu.Parent = xHolder
+
+	for _, val in ipairs({"Standard", "Centered"}) do
+		local btn = Instance.new("TextButton")
+		btn.Size = UDim2.new(1, -10, 0, 30)
+		btn.Position = UDim2.new(0, 5, 0, 5 + (#menu:GetChildren()-1)*35)
+		btn.Text = val
+		btn.BackgroundTransparency = 1
+		btn.Font = Enum.Font.Gotham
+		btn.TextSize = 13
+		btn.TextColor3 = Color3.fromRGB(30,30,30)
+		btn.Parent = menu
+		btn.MouseButton1Click:Connect(function()
+			selectedX = val
+			xDropdown.Text = val
+			menu:Destroy()
+		end)
+	end
 end)
 
--- Auto summon loop
+local auto = false
+
+local toggleWrap = Instance.new("Frame")
+toggleWrap.Size = UDim2.new(1, 0, 0, 40)
+toggleWrap.Parent = tab2Content
+wrapInGlass(toggleWrap)
+
+local toggle = Instance.new("TextButton")
+toggle.Size = UDim2.new(1, -10, 1, -10)
+toggle.Position = UDim2.new(0, 5, 0, 5)
+toggle.Text = "Auto Summon: OFF"
+toggle.Font = Enum.Font.GothamBold
+toggle.TextSize = 14
+toggle.BackgroundTransparency = 1
+toggle.TextColor3 = Color3.fromRGB(30,30,30)
+toggle.Parent = toggleWrap
+
+toggle.MouseButton1Click:Connect(function()
+    auto = not auto
+    toggle.Text = "Auto Summon: " .. (auto and "ON" or "OFF")
+end)
+
 task.spawn(function()
-    while true do
-        task.wait(1)
-        if auto then
-            local args = {
-                [1] = tostring(selectedX),
-                [2] = tostring(selectedY),
-                [3] = {}
-            }
-            game:GetService("ReplicatedStorage").Remote.Server.Gambling.UnitsGacha:FireServer(unpack(args))
-        end
-    end
+	while true do
+		task.wait(1)
+		if auto then
+			local args = {
+				[1] = tostring(selectedX),
+				[2] = tostring(selectedY),
+				[3] = {}
+			}
+			game:GetService("ReplicatedStorage").Remote.Server.Gambling.UnitsGacha:FireServer(unpack(args))
+		end
+	end
 end)
     
 -- tab 3
