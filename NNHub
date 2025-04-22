@@ -186,24 +186,32 @@ local function addTab(tabName)
 	stroke.Transparency = 1
 	stroke.Parent = tabButton
 
-	-- Clone frame giống menu (trừ LeftPanel)
-	local originalFrame = script.Parent:FindFirstChild("MainFrame")
+	-- Tạo Frame nội dung cho tab (giống Frame (8), trừ LeftPanel)
 	local contentFrame = Instance.new("Frame")
 	contentFrame.Name = "Content_" .. tabName
 	contentFrame.Size = UDim2.new(1, 0, 1, 0)
-	contentFrame.BackgroundTransparency = 1
-	contentFrame.Visible = false
+	contentFrame.Position = UDim2.new(0, 0, 0, 0)
+	contentFrame.BackgroundColor3 = Color3.fromRGB(245, 245, 245) -- màu giống main frame
+	contentFrame.BackgroundTransparency = 0
 	contentFrame.BorderSizePixel = 0
+	contentFrame.Visible = false
 	contentFrame.Parent = RightPanel
 
-	local clone = originalFrame:Clone()
-	if clone:FindFirstChild("LeftPanel") then
-		clone.LeftPanel:Destroy()
-	end
-	clone.Name = "TabMenu_" .. tabName
-	clone.Position = UDim2.new(0, 0, 0, 0)
-	clone.Size = UDim2.new(1, 0, 1, 0)
-	clone.Parent = contentFrame
+	local contentCorner = Instance.new("UICorner")
+	contentCorner.CornerRadius = UDim.new(0, 8)
+	contentCorner.Parent = contentFrame
+
+	-- Ví dụ nội dung trong tab (bạn có thể tùy chỉnh)
+	local label = Instance.new("TextLabel")
+	label.Size = UDim2.new(1, -20, 0, 30)
+	label.Position = UDim2.new(0, 10, 0, 10)
+	label.BackgroundTransparency = 1
+	label.Text = "Nội dung của tab: " .. tabName
+	label.TextColor3 = Color3.fromRGB(30, 30, 30)
+	label.Font = Enum.Font.Gotham
+	label.TextSize = 16
+	label.TextXAlignment = Enum.TextXAlignment.Left
+	label.Parent = contentFrame
 
 	-- Lưu tab
 	Tabs[tabName] = {
