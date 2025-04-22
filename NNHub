@@ -139,23 +139,24 @@ local function addTab(tabName)
 	tabButton.Name = "TabButton_" .. tabName
 	tabButton.Text = tabName
 	tabButton.Size = UDim2.new(1, -10, 0, 40)
-	tabButton.BackgroundColor3 = Color3.fromRGB(240, 240, 240) -- màu nhẹ hơn
-	tabButton.TextColor3 = Color3.fromRGB(30, 30, 30)
+	tabButton.BackgroundColor3 = Color3.fromRGB(235, 235, 235) -- màu dịu
+	tabButton.TextColor3 = Color3.fromRGB(40, 40, 40)
 	tabButton.Font = Enum.Font.Gotham
 	tabButton.TextSize = 14
 	tabButton.TextScaled = false -- KHÔNG scale chữ
-	tabButton.TextWrapped = false -- KHÔNG xuống dòng
+	tabButton.TextWrapped = false -- KHÔNG bo chữ, KHÔNG xuống dòng
+	tabButton.ClipsDescendants = true -- tránh bo chữ
 	tabButton.Parent = LeftPanel
 
-	-- Bo viền khung tab
+	-- Bo góc khung tab (KHÔNG phải chữ)
 	local corner = Instance.new("UICorner")
 	corner.CornerRadius = UDim.new(0, 6)
 	corner.Parent = tabButton
 
-	-- Viền sáng khi được chọn (ẩn ban đầu)
+	-- Viền nổi bật khi được chọn
 	local stroke = Instance.new("UIStroke")
 	stroke.Name = "HighlightStroke"
-	stroke.Color = Color3.fromRGB(80, 130, 255) -- màu nổi bật dịu
+	stroke.Color = Color3.fromRGB(100, 150, 255) -- màu dịu nổi bật
 	stroke.Thickness = 2
 	stroke.Transparency = 1 -- ẩn mặc định
 	stroke.Parent = tabButton
@@ -179,24 +180,30 @@ local function addTab(tabName)
 	contentLabel.BackgroundTransparency = 1
 	contentLabel.Parent = contentFrame
 
-	-- Lưu tab vào bảng
+	-- Lưu tab
 	Tabs[tabName] = {
 		Button = tabButton,
 		Content = contentFrame
 	}
 
-	-- Sự kiện click để hiển thị nội dung
+	-- Click chuyển tab
 	tabButton.MouseButton1Click:Connect(function()
 		for name, t in pairs(Tabs) do
 			t.Content.Visible = (name == tabName)
-
-			-- Reset màu và viền tab khác
-			t.Button.BackgroundColor3 = Color3.fromRGB(240, 240, 240)
+			t.Button.BackgroundColor3 = Color3.fromRGB(235, 235, 235)
 			local stroke = t.Button:FindFirstChild("HighlightStroke")
 			if stroke then
 				stroke.Transparency = 1
 			end
 		end
+
+		tabButton.BackgroundColor3 = Color3.fromRGB(200, 220, 255) -- màu tab đang chọn
+		local selectedStroke = tabButton:FindFirstChild("HighlightStroke")
+		if selectedStroke then
+			selectedStroke.Transparency = 0
+		end
+	end)
+end
 
 		-- Làm nổi bật tab đang chọn
 		tabButton.BackgroundColor3 = Color3.fromRGB(200, 220, 255) -- màu nhẹ, dễ nhìn
