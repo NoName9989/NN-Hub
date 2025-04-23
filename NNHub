@@ -139,7 +139,7 @@ DefaultRightLabel.Parent = RightPanel
 DefaultRightLabel.Size = UDim2.new(1, -20, 1, -20)
 DefaultRightLabel.Position = UDim2.new(0, 10, 0, 10)
 DefaultRightLabel.BackgroundTransparency = 1
-DefaultRightLabel.Text = "Welcome to NNHUB - [1.3]"
+DefaultRightLabel.Text = "Welcome to NNHUB - [1.4]"
 DefaultRightLabel.Font = Enum.Font.GothamBold
 DefaultRightLabel.TextSize = 20
 DefaultRightLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -472,7 +472,7 @@ local function createDropdownGlass(parent, labelText, options, defaultValue, onS
         dropdown.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
         dropdown.BackgroundTransparency = 0.15
         dropdown.BorderSizePixel = 0
-        dropdown.ZIndex = 51  -- Đảm bảo dropdown có ZIndex cao hơn các phần tử khác
+        dropdown.ZIndex = 55  -- Đảm bảo dropdown có ZIndex cao hơn các phần tử khác
         dropdown.CanvasSize = UDim2.new(0, 0, 0, #options * 34)
         dropdown.ScrollBarThickness = 4
         dropdown.ScrollingDirection = Enum.ScrollingDirection.Y
