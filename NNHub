@@ -139,7 +139,7 @@ DefaultRightLabel.Parent = RightPanel
 DefaultRightLabel.Size = UDim2.new(1, -20, 1, -20)
 DefaultRightLabel.Position = UDim2.new(0, 10, 0, 10)
 DefaultRightLabel.BackgroundTransparency = 1
-DefaultRightLabel.Text = "Welcome to NNHUB - [1.2]"
+DefaultRightLabel.Text = "Welcome to NNHUB - [1.3]"
 DefaultRightLabel.Font = Enum.Font.GothamBold
 DefaultRightLabel.TextSize = 20
 DefaultRightLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -426,115 +426,110 @@ tween:Play()
 tween.Completed:Wait()
 
 local function createDropdownGlass(parent, labelText, options, defaultValue, onSelect)
-	local holder = Instance.new("Frame")
-	holder.Size = UDim2.new(1, 0, 0, 40)
-	holder.BackgroundTransparency = 1
-	holder.Parent = parent
+    local holder = Instance.new("Frame")
+    holder.Size = UDim2.new(1, 0, 0, 40)
+    holder.BackgroundTransparency = 1
+    holder.Parent = parent
 
-	local label = Instance.new("TextLabel")
-	label.Text = labelText
-	label.Size = UDim2.new(0.5, -10, 1, 0)
-	label.Position = UDim2.new(0, 0, 0, 0)
-	label.BackgroundTransparency = 1
-	label.TextColor3 = Color3.fromRGB(30,30,30)
-	label.Font = Enum.Font.Gotham
-	label.TextSize = 14
-	label.TextXAlignment = Enum.TextXAlignment.Left
-	label.Parent = holder
+    local label = Instance.new("TextLabel")
+    label.Text = labelText
+    label.Size = UDim2.new(0.5, -10, 1, 0)
+    label.Position = UDim2.new(0, 0, 0, 0)
+    label.BackgroundTransparency = 1
+    label.TextColor3 = Color3.fromRGB(30,30,30)
+    label.Font = Enum.Font.Gotham
+    label.TextSize = 14
+    label.TextXAlignment = Enum.TextXAlignment.Left
+    label.Parent = holder
 
-	local dropdownBtn = Instance.new("TextButton")
-	dropdownBtn.Text = defaultValue
-	dropdownBtn.Size = UDim2.new(0.5, -10, 1, 0)
-	dropdownBtn.Position = UDim2.new(0.5, 10, 0, 0)
-	dropdownBtn.BackgroundColor3 = Color3.fromRGB(255,255,255)
-	dropdownBtn.BackgroundTransparency = 0.2
-	dropdownBtn.TextColor3 = Color3.fromRGB(30,30,30)
-	dropdownBtn.Font = Enum.Font.Gotham
-	dropdownBtn.TextSize = 14
-	dropdownBtn.ZIndex = 99
-	dropdownBtn.Parent = holder
-	Instance.new("UICorner", dropdownBtn).CornerRadius = UDim.new(0, 6)
+    local dropdownBtn = Instance.new("TextButton")
+    dropdownBtn.Text = defaultValue
+    dropdownBtn.Size = UDim2.new(0.5, -10, 1, 0)
+    dropdownBtn.Position = UDim2.new(0.5, 10, 0, 0)
+    dropdownBtn.BackgroundColor3 = Color3.fromRGB(255,255,255)
+    dropdownBtn.BackgroundTransparency = 0.2
+    dropdownBtn.TextColor3 = Color3.fromRGB(30,30,30)
+    dropdownBtn.Font = Enum.Font.Gotham
+    dropdownBtn.TextSize = 14
+    dropdownBtn.ZIndex = 50  -- Đảm bảo nút có ZIndex cao
+    dropdownBtn.Parent = holder
+    Instance.new("UICorner", dropdownBtn).CornerRadius = UDim.new(0, 6)
 
-	local selected = defaultValue
-	local UserInputService = game:GetService("UserInputService")
+    local selected = defaultValue
+    local UserInputService = game:GetService("UserInputService")
 
-	dropdownBtn.MouseButton1Click:Connect(function()
-		-- Xoá dropdown cũ nếu có
-		if game.CoreGui:FindFirstChild("NNHubDropdownTemp") then
-			game.CoreGui.NNHubDropdownTemp:Destroy()
-		end
+    dropdownBtn.MouseButton1Click:Connect(function()
+        local old = holder:FindFirstChild("DropdownList")
+        if old then
+            old:Destroy()
+            return
+        end
 
-		local gui = game.CoreGui:FindFirstChild("NNHubGlassUI") or parent:FindFirstAncestorOfClass("ScreenGui")
-		if not gui then return end
+        local dropdown = Instance.new("ScrollingFrame")
+        dropdown.Name = "DropdownList"
+        dropdown.Size = UDim2.new(0.5, -10, 0, 80) -- chiều cao = 2 lần chiều cao nút
+        dropdown.Position = UDim2.new(0.5, 10, 1, 0) -- nằm ngay dưới nút
+        dropdown.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        dropdown.BackgroundTransparency = 0.15
+        dropdown.BorderSizePixel = 0
+        dropdown.ZIndex = 51  -- Đảm bảo dropdown có ZIndex cao hơn các phần tử khác
+        dropdown.CanvasSize = UDim2.new(0, 0, 0, #options * 34)
+        dropdown.ScrollBarThickness = 4
+        dropdown.ScrollingDirection = Enum.ScrollingDirection.Y
+        dropdown.AutomaticCanvasSize = Enum.AutomaticSize.None
+        dropdown.Parent = holder
+        Instance.new("UICorner", dropdown).CornerRadius = UDim.new(0, 8)
 
-		local absPos = dropdownBtn.AbsolutePosition
-		local absSize = dropdownBtn.AbsoluteSize
+        local layout = Instance.new("UIListLayout", dropdown)
+        layout.Padding = UDim.new(0, 4)
+        layout.SortOrder = Enum.SortOrder.LayoutOrder
+        layout.FillDirection = Enum.FillDirection.Vertical
 
-		local dropdown = Instance.new("ScrollingFrame")
-		dropdown.Name = "NNHubDropdownTemp"
-		dropdown.Size = UDim2.new(0, absSize.X, 0, 80)
-		dropdown.Position = UDim2.new(0, absPos.X, 0, absPos.Y + absSize.Y)
-		dropdown.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-		dropdown.BackgroundTransparency = 0.15
-		dropdown.BorderSizePixel = 0
-		dropdown.ZIndex = 100
-		dropdown.ScrollBarThickness = 4
-		dropdown.CanvasSize = UDim2.new(0, 0, 0, #options * 34)
-		dropdown.ScrollingDirection = Enum.ScrollingDirection.Y
-		dropdown.AutomaticCanvasSize = Enum.AutomaticSize.None
-		dropdown.Parent = gui
-		Instance.new("UICorner", dropdown).CornerRadius = UDim.new(0, 8)
+        for _, opt in ipairs(options) do
+            local optBtn = Instance.new("TextButton")
+            optBtn.Size = UDim2.new(1, -10, 0, 30)
+            optBtn.Position = UDim2.new(0, 5, 0, 0)
+            optBtn.BackgroundColor3 = Color3.fromRGB(240, 240, 240)
+            optBtn.Text = opt
+            optBtn.TextColor3 = Color3.fromRGB(30, 30, 30)
+            optBtn.Font = Enum.Font.Gotham
+            optBtn.TextSize = 13
+            optBtn.ZIndex = 52  -- Đảm bảo các phần tử trong dropdown có ZIndex cao hơn phần tử khác
+            optBtn.Parent = dropdown
+            Instance.new("UICorner", optBtn).CornerRadius = UDim.new(0, 6)
 
-		local layout = Instance.new("UIListLayout", dropdown)
-		layout.Padding = UDim.new(0, 4)
-		layout.SortOrder = Enum.SortOrder.LayoutOrder
+            optBtn.MouseEnter:Connect(function()
+                optBtn.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
+            end)
 
-		for _, opt in ipairs(options) do
-			local optBtn = Instance.new("TextButton")
-			optBtn.Size = UDim2.new(1, -10, 0, 30)
-			optBtn.Position = UDim2.new(0, 5, 0, 0)
-			optBtn.BackgroundColor3 = Color3.fromRGB(240, 240, 240)
-			optBtn.Text = opt
-			optBtn.TextColor3 = Color3.fromRGB(30, 30, 30)
-			optBtn.Font = Enum.Font.Gotham
-			optBtn.TextSize = 13
-			optBtn.ZIndex = 101
-			optBtn.Parent = dropdown
-			Instance.new("UICorner", optBtn).CornerRadius = UDim.new(0, 6)
+            optBtn.MouseLeave:Connect(function()
+                optBtn.BackgroundColor3 = Color3.fromRGB(240, 240, 240)
+            end)
 
-			optBtn.MouseEnter:Connect(function()
-				optBtn.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
-			end)
-			optBtn.MouseLeave:Connect(function()
-				optBtn.BackgroundColor3 = Color3.fromRGB(240, 240, 240)
-			end)
+            optBtn.MouseButton1Click:Connect(function()
+                if opt ~= selected then
+                    selected = opt
+                    dropdownBtn.Text = opt
+                    if onSelect then onSelect(opt) end
+                end
+                dropdown:Destroy()
+            end)
+        end
 
-			optBtn.MouseButton1Click:Connect(function()
-				if opt ~= selected then
-					selected = opt
-					dropdownBtn.Text = opt
-					if onSelect then onSelect(opt) end
-				end
-				dropdown:Destroy()
-			end)
-		end
-
-		local conn
-		conn = UserInputService.InputBegan:Connect(function(input)
-			if input.UserInputType == Enum.UserInputType.MouseButton1 then
-				local mousePos = UserInputService:GetMouseLocation()
-				local guiInset = game:GetService("GuiService"):GetGuiInset()
-				local pos = Vector2.new(mousePos.X, mousePos.Y - guiInset.Y)
-				local abs = dropdown.AbsolutePosition
-				local size = dropdown.AbsoluteSize
-				if not (pos.X >= abs.X and pos.X <= abs.X + size.X and
-						pos.Y >= abs.Y and pos.Y <= abs.Y + size.Y) then
-					dropdown:Destroy()
-					conn:Disconnect()
-				end
-			end
-		end)
-	end)
+        local conn
+        conn = UserInputService.InputBegan:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                local mousePos = UserInputService:GetMouseLocation() - Vector2.new(0, game:GetService("GuiService"):GetGuiInset().Y)
+                local absPos = dropdown.AbsolutePosition
+                local absSize = dropdown.AbsoluteSize
+                if not (mousePos.X >= absPos.X and mousePos.X <= absPos.X + absSize.X and
+                        mousePos.Y >= absPos.Y and mousePos.Y <= absPos.Y + absSize.Y) then
+                    dropdown:Destroy()
+                    conn:Disconnect()
+                end
+            end
+        end)
+    end)
 end
 local function wrapInGlass(frame)
     frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
