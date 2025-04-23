@@ -718,7 +718,6 @@ local auto = false
 local runAuto = false
 
 -- Hàm dropdown glass
-local function createDropdownGlass(parent, labelText, options, defaultValue, onSelect)
 	local holder = Instance.new("Frame")
 	holder.Size = UDim2.new(1, 0, 0, 40)
 	holder.BackgroundTransparency = 1
