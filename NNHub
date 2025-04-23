@@ -451,7 +451,7 @@ local function createDropdownGlass(parent, labelText, options, defaultValue, onS
 	dropdownBtn.TextColor3 = Color3.fromRGB(30,30,30)
 	dropdownBtn.Font = Enum.Font.Gotham
 	dropdownBtn.TextSize = 14
-	dropdownBtn.ZIndex = 49
+	dropdownBtn.ZIndex = 99
 	dropdownBtn.Parent = holder
 	Instance.new("UICorner", dropdownBtn).CornerRadius = UDim.new(0, 6)
 
@@ -459,31 +459,35 @@ local function createDropdownGlass(parent, labelText, options, defaultValue, onS
 	local UserInputService = game:GetService("UserInputService")
 
 	dropdownBtn.MouseButton1Click:Connect(function()
-		local old = holder:FindFirstChild("DropdownList")
-		if old then
-			old:Destroy()
-			return
+		-- Xoá dropdown cũ nếu có
+		if game.CoreGui:FindFirstChild("NNHubDropdownTemp") then
+			game.CoreGui.NNHubDropdownTemp:Destroy()
 		end
 
+		local gui = game.CoreGui:FindFirstChild("NNHubGlassUI") or parent:FindFirstAncestorOfClass("ScreenGui")
+		if not gui then return end
+
+		local absPos = dropdownBtn.AbsolutePosition
+		local absSize = dropdownBtn.AbsoluteSize
+
 		local dropdown = Instance.new("ScrollingFrame")
-		dropdown.Name = "DropdownList"
-		dropdown.Size = UDim2.new(0.5, -10, 0, 80) -- chiều cao = 2 lần chiều cao nút
-		dropdown.Position = UDim2.new(0.5, 10, 1, 0) -- nằm ngay dưới nút
+		dropdown.Name = "NNHubDropdownTemp"
+		dropdown.Size = UDim2.new(0, absSize.X, 0, 80)
+		dropdown.Position = UDim2.new(0, absPos.X, 0, absPos.Y + absSize.Y)
 		dropdown.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 		dropdown.BackgroundTransparency = 0.15
 		dropdown.BorderSizePixel = 0
-		dropdown.ZIndex = 50
-		dropdown.CanvasSize = UDim2.new(0, 0, 0, #options * 34)
+		dropdown.ZIndex = 100
 		dropdown.ScrollBarThickness = 4
+		dropdown.CanvasSize = UDim2.new(0, 0, 0, #options * 34)
 		dropdown.ScrollingDirection = Enum.ScrollingDirection.Y
 		dropdown.AutomaticCanvasSize = Enum.AutomaticSize.None
-		dropdown.Parent = holder
+		dropdown.Parent = gui
 		Instance.new("UICorner", dropdown).CornerRadius = UDim.new(0, 8)
 
 		local layout = Instance.new("UIListLayout", dropdown)
 		layout.Padding = UDim.new(0, 4)
 		layout.SortOrder = Enum.SortOrder.LayoutOrder
-		layout.FillDirection = Enum.FillDirection.Vertical
 
 		for _, opt in ipairs(options) do
 			local optBtn = Instance.new("TextButton")
@@ -494,14 +498,13 @@ local function createDropdownGlass(parent, labelText, options, defaultValue, onS
 			optBtn.TextColor3 = Color3.fromRGB(30, 30, 30)
 			optBtn.Font = Enum.Font.Gotham
 			optBtn.TextSize = 13
-			optBtn.ZIndex = 51
+			optBtn.ZIndex = 101
 			optBtn.Parent = dropdown
 			Instance.new("UICorner", optBtn).CornerRadius = UDim.new(0, 6)
 
 			optBtn.MouseEnter:Connect(function()
 				optBtn.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
 			end)
-
 			optBtn.MouseLeave:Connect(function()
 				optBtn.BackgroundColor3 = Color3.fromRGB(240, 240, 240)
 			end)
@@ -519,11 +522,13 @@ local function createDropdownGlass(parent, labelText, options, defaultValue, onS
 		local conn
 		conn = UserInputService.InputBegan:Connect(function(input)
 			if input.UserInputType == Enum.UserInputType.MouseButton1 then
-				local mousePos = UserInputService:GetMouseLocation() - Vector2.new(0, game:GetService("GuiService"):GetGuiInset().Y)
-				local absPos = dropdown.AbsolutePosition
-				local absSize = dropdown.AbsoluteSize
-				if not (mousePos.X >= absPos.X and mousePos.X <= absPos.X + absSize.X and
-						mousePos.Y >= absPos.Y and mousePos.Y <= absPos.Y + absSize.Y) then
+				local mousePos = UserInputService:GetMouseLocation()
+				local guiInset = game:GetService("GuiService"):GetGuiInset()
+				local pos = Vector2.new(mousePos.X, mousePos.Y - guiInset.Y)
+				local abs = dropdown.AbsolutePosition
+				local size = dropdown.AbsoluteSize
+				if not (pos.X >= abs.X and pos.X <= abs.X + size.X and
+						pos.Y >= abs.Y and pos.Y <= abs.Y + size.Y) then
 					dropdown:Destroy()
 					conn:Disconnect()
 				end
