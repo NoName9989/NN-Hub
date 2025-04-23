@@ -465,14 +465,18 @@ local function createDropdownGlass(parent, labelText, options, defaultValue, onS
 			return
 		end
 
-		local dropdown = Instance.new("Frame")
+		local dropdown = Instance.new("ScrollingFrame")
 		dropdown.Name = "DropdownList"
-		dropdown.Size = UDim2.new(1, 0, 0, #options * 36)
-		dropdown.Position = UDim2.new(0, 0, 0, -(#options * 36 + 4)) -- phía trên
+		dropdown.Size = UDim2.new(0.5, -10, 0, 80) -- chiều cao = 2 lần chiều cao nút
+		dropdown.Position = UDim2.new(0.5, 10, 1, 0) -- nằm ngay dưới nút
 		dropdown.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 		dropdown.BackgroundTransparency = 0.15
 		dropdown.BorderSizePixel = 0
 		dropdown.ZIndex = 50
+		dropdown.CanvasSize = UDim2.new(0, 0, 0, #options * 34)
+		dropdown.ScrollBarThickness = 4
+		dropdown.ScrollingDirection = Enum.ScrollingDirection.Y
+		dropdown.AutomaticCanvasSize = Enum.AutomaticSize.None
 		dropdown.Parent = holder
 		Instance.new("UICorner", dropdown).CornerRadius = UDim.new(0, 8)
 
@@ -527,7 +531,6 @@ local function createDropdownGlass(parent, labelText, options, defaultValue, onS
 		end)
 	end)
 end
-
 local function wrapInGlass(frame)
     frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     frame.BackgroundTransparency = 0.25
