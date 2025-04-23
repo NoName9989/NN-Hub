@@ -2,8 +2,13 @@
 -- NN Hub Glass UI - With Confirmation Box (Đã tích hợp bố cục 2:8)
 
 -- Nếu GUI đã tồn tại thì xoá
-if game.CoreGui:FindFirstChild("NNHubGlassUI") then
-	game.CoreGui.NNHubGlassUI:Destroy()
+local success, err = pcall(function()
+    if game.CoreGui:FindFirstChild("NNHubGlassUI") then
+        game.CoreGui.NNHubGlassUI:Destroy()
+    end
+end)
+if not success then
+    warn("Lỗi khi xóa GUI cũ: " .. err)
 end
 
 local UserInputService = game:GetService("UserInputService")
@@ -253,26 +258,46 @@ local MinBtn = Instance.new("TextButton")
 MinBtn.Parent = MainFrame
 MinBtn.Size = UDim2.new(0, 30, 0, 30)
 MinBtn.AnchorPoint = Vector2.new(1, 0)
-MinBtn.Position = UDim2.new(1, -80, 0, 20)  -- Lùi sang trái và hạ xuống
+MinBtn.Position = UDim2.new(1, -80, 0, 20)
 MinBtn.BackgroundColor3 = Color3.fromRGB(200, 200, 200)
 MinBtn.Text = "-"
 MinBtn.TextColor3 = Color3.fromRGB(50, 50, 50)
 MinBtn.Font = Enum.Font.Gotham
 MinBtn.TextSize = 16
 Instance.new("UICorner", MinBtn).CornerRadius = UDim.new(0, 6)
+local minStroke = Instance.new("UIStroke", MinBtn)
+minStroke.Color = Color3.fromRGB(100, 150, 255)
+minStroke.Thickness = 2
+minStroke.Transparency = 1
+MinBtn.MouseEnter:Connect(function()
+    minStroke.Transparency = 0
+end)
+MinBtn.MouseLeave:Connect(function()
+    minStroke.Transparency = 1
+end)
 
 -- Close button
 local CloseBtn = Instance.new("TextButton")
 CloseBtn.Parent = MainFrame
 CloseBtn.Size = UDim2.new(0, 30, 0, 30)
 CloseBtn.AnchorPoint = Vector2.new(1, 0)
-CloseBtn.Position = UDim2.new(1, -40, 0, 20)  -- Lùi sang trái và hạ xuống, nằm cạnh MinBtn
+CloseBtn.Position = UDim2.new(1, -40, 0, 20)
 CloseBtn.BackgroundColor3 = Color3.fromRGB(255, 90, 90)
 CloseBtn.Text = "X"
 CloseBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 CloseBtn.Font = Enum.Font.GothamBold
 CloseBtn.TextSize = 16
 Instance.new("UICorner", CloseBtn).CornerRadius = UDim.new(0, 6)
+local closeStroke = Instance.new("UIStroke", CloseBtn)
+closeStroke.Color = Color3.fromRGB(100, 150, 255)
+closeStroke.Thickness = 2
+closeStroke.Transparency = 1
+CloseBtn.MouseEnter:Connect(function()
+    closeStroke.Transparency = 0
+end)
+CloseBtn.MouseLeave:Connect(function()
+    closeStroke.Transparency = 1
+end)
 
 -- Game Name
 local GameName = Instance.new("TextLabel")
@@ -382,22 +407,23 @@ end)
 
 -- Toggle bằng RightShift
 UserInputService.InputBegan:Connect(function(input, gpe)
-	if not gpe and input.KeyCode == OpenKey then
-		visible = not visible
-		MainFrame.Visible = visible
-	end
+    if not gpe and input.KeyCode == OpenKey then
+        visible = not visible
+        if visible and isMinimized then
+            maximize()
+        else
+            MainFrame.Visible = visible
+        end
+    end
 end)
 
--- Fade-in
 MainFrame.Visible = false
 task.wait(0.4)
 MainFrame.Visible = true
-MainFrame.BackgroundTransparency = 1
-for i = 1, 10 do
-	MainFrame.BackgroundTransparency = 1 - (i * 0.075)
-	task.wait(0.02)
-end
-MainFrame.BackgroundTransparency = 0.25
+local tweenInfo = TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+local tween = game:GetService("TweenService"):Create(MainFrame, tweenInfo, {BackgroundTransparency = 0.25})
+tween:Play()
+tween.Completed:Wait()
 
 -- game:GetService("RunService").RenderStepped:Connect(function()
 --	if not isMinimized and MainFrame.Visible then
@@ -491,21 +517,18 @@ end)
 
 		-- Click ngoài để đóng
 		local conn
-		conn = UserInputService.InputBegan:Connect(function(input)
-			if input.UserInputType == Enum.UserInputType.MouseButton1 then
-				local mouse = UserInputService:GetMouseLocation()
-				local guiInset = game:GetService("GuiService"):GetGuiInset()
-				local pos = Vector2.new(mouse.X, mouse.Y - guiInset.Y)
-				local abs = dropdown.AbsolutePosition
-				local size = dropdown.AbsoluteSize
-				if not (pos.X >= abs.X and pos.X <= abs.X + size.X and pos.Y >= abs.Y and pos.Y <= abs.Y + size.Y) then
-					dropdown:Destroy()
-					conn:Disconnect()
-				end
-			end
-		end)
-	end)
-end
+conn = UserInputService.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        local mousePos = UserInputService:GetMouseLocation() - Vector2.new(0, game:GetService("GuiService"):GetGuiInset().Y)
+        local absPos = dropdown.AbsolutePosition
+        local absSize = dropdown.AbsoluteSize
+        if not (mousePos.X >= absPos.X and mousePos.X <= absPos.X + absSize.X and
+                mousePos.Y >= absPos.Y and mousePos.Y <= absPos.Y + absSize.Y) then
+            dropdown:Destroy()
+            conn:Disconnect()
+        end
+    end
+end)
 
 local function wrapInGlass(frame)
     frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -750,21 +773,31 @@ toggle.MouseButton1Click:Connect(function()
 	toggle.Text = "Auto Summon: " .. (auto and "ON" or "OFF")
 
 	if auto and not runAuto then
-		runAuto = true
-		task.spawn(function()
-			while auto do
-				local args = {
-					[1] = tostring(selectedX),
-					[2] = tostring(selectedY),
-					[3] = {}
-				}
-				game:GetService("ReplicatedStorage").Remote.Server.Gambling.UnitsGacha:FireServer(unpack(args))
-				task.wait(1)
-			end
-			runAuto = false
-		end)
-	end
-end)
+    runAuto = true
+    task.spawn(function()
+        while runAuto do
+            if auto then
+                local success, err = pcall(function()
+                    local args = {
+                        [1] = tostring(selectedX),
+                        [2] = tostring(selectedY),
+                        [3] = {}
+                    }
+                    game:GetService("ReplicatedStorage").Remote.Server.Gambling.UnitsGacha:FireServer(unpack(args))
+                end)
+                if not success then
+                    warn("Lỗi khi gọi UnitsGacha: " .. err)
+                    auto = false
+                    toggle.Text = "Auto Summon: OFF"
+                end
+            end
+            task.wait(1)
+        end
+        runAuto = false
+    end)
+elseif not auto and runAuto then
+    runAuto = false
+end
     
 -- tab 3
 addTab("🔰Play")
