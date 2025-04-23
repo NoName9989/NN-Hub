@@ -425,12 +425,6 @@ local tween = game:GetService("TweenService"):Create(MainFrame, tweenInfo, {Back
 tween:Play()
 tween.Completed:Wait()
 
--- game:GetService("RunService").RenderStepped:Connect(function()
---	if not isMinimized and MainFrame.Visible then
---		MainFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
---	end
---end)
-
 local function createDropdownGlass(parent, labelText, options, defaultValue, onSelect)
 	local holder = Instance.new("Frame")
 	holder.Size = UDim2.new(1, 0, 0, 40)
@@ -527,8 +521,10 @@ conn = UserInputService.InputBegan:Connect(function(input)
             dropdown:Destroy()
             conn:Disconnect()
         end
-    end
-end)
+      end
+    end)
+   end)
+  end
 
 local function wrapInGlass(frame)
     frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -773,32 +769,33 @@ toggle.MouseButton1Click:Connect(function()
 	toggle.Text = "Auto Summon: " .. (auto and "ON" or "OFF")
 
 	if auto and not runAuto then
-    runAuto = true
-    task.spawn(function()
-        while runAuto do
-            if auto then
-                local success, err = pcall(function()
-                    local args = {
-                        [1] = tostring(selectedX),
-                        [2] = tostring(selectedY),
-                        [3] = {}
-                    }
-                    game:GetService("ReplicatedStorage").Remote.Server.Gambling.UnitsGacha:FireServer(unpack(args))
-                end)
-                if not success then
-                    warn("Lỗi khi gọi UnitsGacha: " .. err)
-                    auto = false
-                    toggle.Text = "Auto Summon: OFF"
-                end
-            end
-            task.wait(1)
-        end
-        runAuto = false
-    end)
-elseif not auto and runAuto then
-    runAuto = false
-end
-    
--- tab 3
+		runAuto = true
+		task.spawn(function()
+			while runAuto do
+				if auto then
+					local success, err = pcall(function()
+						local args = {
+							[1] = tostring(selectedX),
+							[2] = tostring(selectedY),
+							[3] = {}
+						}
+						game:GetService("ReplicatedStorage").Remote.Server.Gambling.UnitsGacha:FireServer(unpack(args))
+					end)
+					if not success then
+						warn("Lỗi khi gọi UnitsGacha: " .. err)
+						auto = false
+						toggle.Text = "Auto Summon: OFF"
+					end
+				end
+				task.wait(1)
+			end
+			runAuto = false
+		end)
+	elseif not auto and runAuto then
+		runAuto = false
+	end
+end)
+
+-- tab 3 
 addTab("🔰Play")
 
