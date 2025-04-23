@@ -426,105 +426,102 @@ tween:Play()
 tween.Completed:Wait()
 
 local function createDropdownGlass(parent, labelText, options, defaultValue, onSelect)
-	local holder = Instance.new("Frame")
-	holder.Size = UDim2.new(1, 0, 0, 40)
-	holder.BackgroundTransparency = 1
-	holder.Parent = parent
+    local holder = Instance.new("Frame")
+    holder.Size = UDim2.new(1, 0, 0, 40)
+    holder.BackgroundTransparency = 1
+    holder.Parent = parent
 
-	local label = Instance.new("TextLabel")
-	label.Text = labelText
-	label.Size = UDim2.new(0.5, -10, 1, 0)
-	label.Position = UDim2.new(0, 0, 0, 0)
-	label.BackgroundTransparency = 1
-	label.TextColor3 = Color3.fromRGB(30,30,30)
-	label.Font = Enum.Font.Gotham
-	label.TextSize = 14
-	label.TextXAlignment = Enum.TextXAlignment.Left
-	label.Parent = holder
+    local label = Instance.new("TextLabel")
+    label.Text = labelText
+    label.Size = UDim2.new(0.5, -10, 1, 0)
+    label.Position = UDim2.new(0, 0, 0, 0)
+    label.BackgroundTransparency = 1
+    label.TextColor3 = Color3.fromRGB(30, 30, 30)
+    label.Font = Enum.Font.Gotham
+    label.TextSize = 14
+    label.TextXAlignment = Enum.TextXAlignment.Left
+    label.Parent = holder
 
-	local dropdownBtn = Instance.new("TextButton")
-	dropdownBtn.Text = defaultValue
-	dropdownBtn.Size = UDim2.new(0.5, -10, 1, 0)
-	dropdownBtn.Position = UDim2.new(0.5, 10, 0, 0)
-	dropdownBtn.BackgroundColor3 = Color3.fromRGB(255,255,255)
-	dropdownBtn.BackgroundTransparency = 0.2
-	dropdownBtn.TextColor3 = Color3.fromRGB(30,30,30)
-	dropdownBtn.Font = Enum.Font.Gotham
-	dropdownBtn.TextSize = 14
-	dropdownBtn.Parent = holder
-	Instance.new("UICorner", dropdownBtn).CornerRadius = UDim.new(0, 6)
+    local dropdownBtn = Instance.new("TextButton")
+    dropdownBtn.Text = defaultValue
+    dropdownBtn.Size = UDim2.new(0.5, -10, 1, 0)
+    dropdownBtn.Position = UDim2.new(0.5, 10, 0, 0)
+    dropdownBtn.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    dropdownBtn.BackgroundTransparency = 0.2
+    dropdownBtn.TextColor3 = Color3.fromRGB(30, 30, 30)
+    dropdownBtn.Font = Enum.Font.Gotham
+    dropdownBtn.TextSize = 14
+    dropdownBtn.Parent = holder
+    Instance.new("UICorner", dropdownBtn).CornerRadius = UDim.new(0, 6)
 
-	local selected = defaultValue
-	local UserInputService = game:GetService("UserInputService")
+    local selected = defaultValue
+    local UserInputService = game:GetService("UserInputService")
 
-	dropdownBtn.MouseButton1Click:Connect(function()
-	-- Xoá dropdown cũ nếu có
-	local old = holder:FindFirstChild("DropdownList")
-	if old then
-		old:Destroy()
-		return
-	end
-
-		local dropdown = Instance.new("Frame")
-		dropdown.Name = "DropdownList"
-		dropdown.Size = UDim2.new(1, 0, 0, #options * 36)
-		dropdown.Position = UDim2.new(0, 0, 1, 4)
-		dropdown.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-		dropdown.BackgroundTransparency = 0.15
-		dropdown.BorderSizePixel = 0
-		dropdown.ZIndex = 10
-		dropdown.Parent = holder
-		Instance.new("UICorner", dropdown).CornerRadius = UDim.new(0, 8)
-
-		local layout = Instance.new("UIListLayout", dropdown)
-		layout.Padding = UDim.new(0, 4)
-		layout.SortOrder = Enum.SortOrder.LayoutOrder
-
-		for _, opt in ipairs(options) do
-			local optBtn = Instance.new("TextButton")
-			optBtn.Size = UDim2.new(1, -10, 0, 30)
-			optBtn.Position = UDim2.new(0, 5, 0, 0)
-			optBtn.BackgroundColor3 = Color3.fromRGB(240, 240, 240)
-			optBtn.Text = opt
-			optBtn.TextColor3 = Color3.fromRGB(30, 30, 30)
-			optBtn.Font = Enum.Font.Gotham
-			optBtn.TextSize = 13
-			optBtn.ZIndex = 11
-			optBtn.Parent = dropdown
-			Instance.new("UICorner", optBtn).CornerRadius = UDim.new(0, 6)
-                        optBtn.MouseEnter:Connect(function()
-	optBtn.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
-end)
-
-optBtn.MouseLeave:Connect(function()
-	optBtn.BackgroundColor3 = Color3.fromRGB(240, 240, 240)
-end)
-
-			optBtn.MouseButton1Click:Connect(function()
-	if opt ~= selected then
-		selected = opt
-		dropdownBtn.Text = opt
-		if onSelect then onSelect(opt) end
-	end
-	dropdown:Destroy()
-end)
-
-		-- Click ngoài để đóng
-		local conn
-conn = UserInputService.InputBegan:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-        local mousePos = UserInputService:GetMouseLocation() - Vector2.new(0, game:GetService("GuiService"):GetGuiInset().Y)
-        local absPos = dropdown.AbsolutePosition
-        local absSize = dropdown.AbsoluteSize
-        if not (mousePos.X >= absPos.X and mousePos.X <= absPos.X + absSize.X and
-                mousePos.Y >= absPos.Y and mousePos.Y <= absPos.Y + absSize.Y) then
-            dropdown:Destroy()
-            conn:Disconnect()
+    dropdownBtn.MouseButton1Click:Connect(function()
+        local old = holder:FindFirstChild("DropdownList")
+        if old then
+            old:Destroy()
+            return
         end
-      end
+
+        local dropdown = Instance.new("Frame")
+        dropdown.Name = "DropdownList"
+        dropdown.Size = UDim2.new(1, 0, 0, #options * 36)
+        dropdown.Position = UDim2.new(0, 0, 1, 4)
+        dropdown.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        dropdown.BackgroundTransparency = 0.15
+        dropdown.BorderSizePixel = 0
+        dropdown.ZIndex = 10
+        dropdown.Parent = holder
+        Instance.new("UICorner", dropdown).CornerRadius = UDim.new(0, 8)
+
+        local layout = Instance.new("UIListLayout", dropdown)
+        layout.Padding = UDim.new(0, 4)
+        layout.SortOrder = Enum.SortOrder.LayoutOrder
+
+        for _, opt in ipairs(options) do
+            local optBtn = Instance.new("TextButton")
+            optBtn.Size = UDim2.new(1, -10, 0, 30)
+            optBtn.Position = UDim2.new(0, 5, 0, 0)
+            optBtn.BackgroundColor3 = Color3.fromRGB(240, 240, 240)
+            optBtn.Text = opt
+            optBtn.TextColor3 = Color3.fromRGB(30, 30, 30)
+            optBtn.Font = Enum.Font.Gotham
+            optBtn.TextSize = 13
+            optBtn.ZIndex = 11
+            optBtn.Parent = dropdown
+            Instance.new("UICorner", optBtn).CornerRadius = UDim.new(0, 6)
+            optBtn.MouseEnter:Connect(function()
+                optBtn.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
+            end)
+            optBtn.MouseLeave:Connect(function()
+                optBtn.BackgroundColor3 = Color3.fromRGB(240, 240, 240)
+            end)
+            optBtn.MouseButton1Click:Connect(function()
+                if opt ~= selected then
+                    selected = opt
+                    dropdownBtn.Text = opt
+                    if onSelect then onSelect(opt) end
+                end
+                dropdown:Destroy()
+            end)
+        end
+
+        local conn
+        conn = UserInputService.InputBegan:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+                local mousePos = UserInputService:GetMouseLocation() - Vector2.new(0, game:GetService("GuiService"):GetGuiInset().Y)
+                local absPos = dropdown.AbsolutePosition
+                local absSize = dropdown.AbsoluteSize
+                if not (mousePos.X >= absPos.X and mousePos.X <= absPos.X + absSize.X and
+                        mousePos.Y >= absPos.Y and mousePos.Y <= absPos.Y + absSize.Y) then
+                    dropdown:Destroy()
+                    conn:Disconnect()
+                end
+            end
+        end)
     end)
-   end)
-  end
+end
 
 local function wrapInGlass(frame)
     frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -572,7 +569,6 @@ local function createToggleButton(parent, defaultState, size, position, onToggle
 end
 
 local function createSlider(parent, minValue, maxValue, defaultValue, size, position)
-    -- Outer frame
     local slider = Instance.new("Frame")
     slider.Size = size or UDim2.new(0, 300, 0, 20)
     slider.Position = position or UDim2.new(0, 0, 0, 0)
@@ -582,7 +578,6 @@ local function createSlider(parent, minValue, maxValue, defaultValue, size, posi
     slider.Parent = parent
     Instance.new("UICorner", slider).CornerRadius = UDim.new(0, 6)
 
-    -- Filled bar
     local sliderBar = Instance.new("Frame")
     sliderBar.Size = UDim2.new((defaultValue - minValue) / (maxValue - minValue), 0, 1, 0)
     sliderBar.Position = UDim2.new(0, 0, 0, 0)
@@ -591,7 +586,6 @@ local function createSlider(parent, minValue, maxValue, defaultValue, size, posi
     sliderBar.Parent = slider
     Instance.new("UICorner", sliderBar).CornerRadius = UDim.new(0, 6)
 
-    -- Knob
     local sliderButton = Instance.new("TextButton")
     sliderButton.Size = UDim2.new(0, 24, 0, 24)
     sliderButton.Position = UDim2.new((defaultValue - minValue) / (maxValue - minValue), -12, 0.5, -12)
@@ -601,13 +595,11 @@ local function createSlider(parent, minValue, maxValue, defaultValue, size, posi
     sliderButton.Parent = slider
     Instance.new("UICorner", sliderButton).CornerRadius = UDim.new(1, 0)
 
-    -- Shadow glow effect
     local shadow = Instance.new("UIStroke", sliderButton)
     shadow.Color = Color3.fromRGB(160, 160, 160)
     shadow.Thickness = 1
     shadow.Transparency = 0.4
 
-    -- Drag logic
     local dragging = false
     local inputService = game:GetService("UserInputService")
 
@@ -617,7 +609,7 @@ local function createSlider(parent, minValue, maxValue, defaultValue, size, posi
         end
     end)
 
-    inputService.InputEnded:Connect(function(input)
+    inputService.Input  sliderButton.InputEnded:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 then
             dragging = false
         end
@@ -641,20 +633,14 @@ local startTime = tick()
 addTab("❗️Status")
 local statsContent = Tabs["❗️Status"].Content
 
--- Thêm padding vào trước
+-- Thêm padding
 local padding = Instance.new("UIPadding")
 padding.PaddingLeft = UDim.new(0, 10)
 padding.PaddingRight = UDim.new(0, 10)
 padding.PaddingTop = UDim.new(0, 10)
 padding.Parent = statsContent
 
--- Thêm layout trước
-local layout = Instance.new("UIListLayout")
-layout.Padding = UDim.new(0, 8)
-layout.SortOrder = Enum.SortOrder.LayoutOrder
-layout.Parent = statsContent
-
--- Rồi mới thêm tiêu đề
+-- Tiêu đề
 local statsTitle = Instance.new("TextLabel")
 statsTitle.Text = "THÔNG SỐ SERVER"
 statsTitle.Size = UDim2.new(1, 0, 0, 30)
@@ -665,56 +651,54 @@ statsTitle.TextColor3 = Color3.fromRGB(30, 30, 30)
 statsTitle.TextXAlignment = Enum.TextXAlignment.Left
 statsTitle.Parent = statsContent
 
-local function createStatFrame(titleText, getValueFunc, yPos)
-	local frame = Instance.new("Frame")
-	frame.Size = UDim2.new(1, -20, 0, 40)
-	frame.Position = UDim2.new(0, 10, 0, yPos)
-	frame.BackgroundColor3 = Color3.fromRGB(240, 240, 240)
-	frame.BackgroundTransparency = 0
-	frame.BorderSizePixel = 0
-	frame.Parent = statsContent
-	Instance.new("UICorner", frame)
+local function createStatFrame(titleText, getValueFunc)
+    local frame = Instance.new("Frame")
+    frame.Size = UDim2.new(1, -20, 0, 40)
+    frame.BackgroundColor3 = Color3.fromRGB(240, 240, 240)
+    frame.BackgroundTransparency = 0
+    frame.BorderSizePixel = 0
+    frame.Parent = statsContent
+    Instance.new("UICorner", frame)
 
-	local label = Instance.new("TextLabel")
-	label.Size = UDim2.new(1, -10, 1, 0)
-	label.Position = UDim2.new(0, 10, 0, 0)
-	label.BackgroundTransparency = 1
-	label.Text = titleText .. ": " .. getValueFunc()
-	label.Font = Enum.Font.Gotham
-	label.TextSize = 16
-	label.TextXAlignment = Enum.TextXAlignment.Left
-	label.TextColor3 = Color3.fromRGB(50, 50, 50)
-	label.Parent = frame
+    local label = Instance.new("TextLabel")
+    label.Size = UDim2.new(1, -10, 1, 0)
+    label.Position = UDim2.new(0, 10, 0, 0)
+    label.BackgroundTransparency = 1
+    label.Text = titleText .. ": " .. getValueFunc()
+    label.Font = Enum.Font.Gotham
+    label.TextSize = 16
+    label.TextXAlignment = Enum.TextXAlignment.Left
+    label.TextColor3 = Color3.fromRGB(50, 50, 50)
+    label.Parent = frame
 
-	-- Cập nhật realtime nếu cần
-	game:GetService("RunService").RenderStepped:Connect(function()
-		label.Text = titleText .. ": " .. getValueFunc()
-	end)
+    game:GetService("RunService").RenderStepped:Connect(function()
+        label.Text = titleText .. ": " .. getValueFunc()
+    end)
 end
 
 createStatFrame("Thời gian khởi chạy", function()
-	local elapsed = math.floor(tick() - startTime)
-	local hours = math.floor(elapsed / 3600)
-	local minutes = math.floor((elapsed % 3600) / 60)
-	local seconds = elapsed % 60
-	return string.format("%02d:%02d:%02d", hours, minutes, seconds)
-end, 200)
+    local elapsed = math.floor(tick() - startTime)
+    local hours = math.floor(elapsed / 3600)
+    local minutes = math.floor((elapsed % 3600) / 60)
+    local seconds = elapsed % 60
+    return string.format("%02d:%02d:%02d", hours, minutes, seconds)
+end)
 
 createStatFrame("Tên người dùng", function()
-	return game.Players.LocalPlayer.Name
-end, 200)
+    return game.Players.LocalPlayer.Name
+end)
 
 createStatFrame("FPS", function()
-	return tostring(math.floor(workspace:GetRealPhysicsFPS()))
-end, 50)
+    return tostring(math.floor(workspace:GetRealPhysicsFPS() or 0))
+end)
 
 createStatFrame("Place ID", function()
-	return tostring(game.PlaceId)
-end, 100)
+    return tostring(game.PlaceId)
+end)
 
 createStatFrame("Thời gian", function()
-	return os.date("%H:%M:%S")
-end, 250)
+    return os.date("%H:%M:%S")
+end)
 
 -- tab 2
 addTab("🌠Summon")
@@ -738,11 +722,11 @@ local runAuto = false
 
 -- Tạo dropdown cho X và Y
 createDropdownGlass(tab2Content, "Chế độ:", {"Standard", "Centered"}, "Standard", function(v)
-	selectedX = v
+    selectedX = v
 end)
 
 createDropdownGlass(tab2Content, "Số lượng:", {"1", "10"}, "1", function(v)
-	selectedY = v
+    selectedY = v
 end)
 
 -- Toggle Auto Summon
@@ -761,41 +745,49 @@ toggle.Text = "Auto Summon: OFF"
 toggle.Font = Enum.Font.GothamBold
 toggle.TextSize = 14
 toggle.BackgroundTransparency = 1
-toggle.TextColor3 = Color3.fromRGB(30,30,30)
+toggle.TextColor3 = Color3.fromRGB(30, 30, 30)
 toggle.Parent = toggleWrap
 
 toggle.MouseButton1Click:Connect(function()
-	auto = not auto
-	toggle.Text = "Auto Summon: " .. (auto and "ON" or "OFF")
+    auto = not auto
+    toggle.Text = "Auto Summon: " .. (auto and "ON" or "OFF")
 
-	if auto and not runAuto then
-		runAuto = true
-		task.spawn(function()
-			while runAuto do
-				if auto then
-					local success, err = pcall(function()
-						local args = {
-							[1] = tostring(selectedX),
-							[2] = tostring(selectedY),
-							[3] = {}
-						}
-						game:GetService("ReplicatedStorage").Remote.Server.Gambling.UnitsGacha:FireServer(unpack(args))
-					end)
-					if not success then
-						warn("Lỗi khi gọi UnitsGacha: " .. err)
-						auto = false
-						toggle.Text = "Auto Summon: OFF"
-					end
-				end
-				task.wait(1)
-			end
-			runAuto = false
-		end)
-	elseif not auto and runAuto then
-		runAuto = false
-	end
+    if auto and not runAuto then
+        runAuto = true
+        task.spawn(function()
+            while runAuto do
+                if auto then
+                    local success, err = pcall(function()
+                        local args = {
+                            [1] = tostring(selectedX),
+                            [2] = tostring(selectedY),
+                            [3] = {}
+                        }
+                        local ReplicatedStorage = game:GetService("ReplicatedStorage")
+                        local Remote = ReplicatedStorage:FindFirstChild("Remote")
+                        local Server = Remote and Remote:FindFirstChild("Server")
+                        local Gambling = Server and Server:FindFirstChild("Gambling")
+                        local UnitsGacha = Gambling and Gambling:FindFirstChild("UnitsGacha")
+                        if UnitsGacha then
+                            UnitsGacha:FireServer(unpack(args))
+                        else
+                            error("UnitsGacha remote not found")
+                        end
+                    end)
+                    if not success then
+                        warn("Lỗi khi gọi UnitsGacha: " .. err)
+                        auto = false
+                        toggle.Text = "Auto Summon: OFF"
+                    end
+                end
+                task.wait(1)
+            end
+            runAuto = false
+        end)
+    elseif not auto and runAuto then
+        runAuto = false
+    end
 end)
 
--- tab 3 
+-- tab 3
 addTab("🔰Play")
-
