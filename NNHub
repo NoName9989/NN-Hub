@@ -405,65 +405,118 @@ MainFrame.BackgroundTransparency = 0.25
 --	end
 --end)
 
-local function createDropdown(parent, options, defaultOption, size, position)
-    local button = Instance.new("TextButton")
-    button.Text = defaultOption
-    button.Size = size or UDim2.new(0, 200, 0, 40)
-    button.Position = position or UDim2.new(0, 0, 0, 0)
-    button.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    button.BackgroundTransparency = 0.2
-    button.TextColor3 = Color3.fromRGB(30, 30, 30)
-    button.Font = Enum.Font.Gotham
-    button.TextSize = 14
-    button.Parent = parent
-    Instance.new("UICorner", button).CornerRadius = UDim.new(0, 8)
+local function createDropdownGlass(parent, labelText, options, defaultValue, onSelect)
+	local holder = Instance.new("Frame")
+	holder.Size = UDim2.new(1, 0, 0, 40)
+	holder.BackgroundTransparency = 1
+	holder.Parent = parent
 
-    local dropDownFrame = Instance.new("Frame")
-    dropDownFrame.Size = UDim2.new(0, 200, 0, #options * 35)
-    dropDownFrame.Position = UDim2.new(0, 0, 1, 4)
-    dropDownFrame.BackgroundColor3 = Color3.fromRGB(245, 245, 245)
-    dropDownFrame.BackgroundTransparency = 0.1
-    dropDownFrame.BorderSizePixel = 0
-    dropDownFrame.Visible = false
-    dropDownFrame.Parent = button
-    dropDownFrame.ZIndex = 2
-    Instance.new("UICorner", dropDownFrame).CornerRadius = UDim.new(0, 8)
+	local label = Instance.new("TextLabel")
+	label.Text = labelText
+	label.Size = UDim2.new(0.5, -10, 1, 0)
+	label.Position = UDim2.new(0, 0, 0, 0)
+	label.BackgroundTransparency = 1
+	label.TextColor3 = Color3.fromRGB(30,30,30)
+	label.Font = Enum.Font.Gotham
+	label.TextSize = 14
+	label.TextXAlignment = Enum.TextXAlignment.Left
+	label.Parent = holder
 
-    local layout = Instance.new("UIListLayout", dropDownFrame)
-    layout.Padding = UDim.new(0, 4)
-    layout.SortOrder = Enum.SortOrder.LayoutOrder
+	local dropdownBtn = Instance.new("TextButton")
+	dropdownBtn.Text = defaultValue
+	dropdownBtn.Size = UDim2.new(0.5, -10, 1, 0)
+	dropdownBtn.Position = UDim2.new(0.5, 10, 0, 0)
+	dropdownBtn.BackgroundColor3 = Color3.fromRGB(255,255,255)
+	dropdownBtn.BackgroundTransparency = 0.2
+	dropdownBtn.TextColor3 = Color3.fromRGB(30,30,30)
+	dropdownBtn.Font = Enum.Font.Gotham
+	dropdownBtn.TextSize = 14
+	dropdownBtn.Parent = holder
+	Instance.new("UICorner", dropdownBtn).CornerRadius = UDim.new(0, 6)
 
-    for _, option in ipairs(options) do
-        local optBtn = Instance.new("TextButton")
-        optBtn.Text = option
-        optBtn.Size = UDim2.new(1, -10, 0, 30)
-        optBtn.BackgroundColor3 = Color3.fromRGB(240, 240, 240)
-        optBtn.TextColor3 = Color3.fromRGB(40, 40, 40)
-        optBtn.Font = Enum.Font.Gotham
-        optBtn.TextSize = 13
-        optBtn.Parent = dropDownFrame
-        optBtn.ZIndex = 3
-        Instance.new("UICorner", optBtn).CornerRadius = UDim.new(0, 6)
+	local selected = defaultValue
+	local UserInputService = game:GetService("UserInputService")
 
-        optBtn.MouseButton1Click:Connect(function()
-            button.Text = option
-            dropDownFrame.Visible = false
-        end)
-    end
+	dropdownBtn.MouseButton1Click:Connect(function()
+	-- Xoá dropdown cũ nếu có
+	local old = holder:FindFirstChild("DropdownList")
+	if old then
+		old:Destroy()
+		return
+	end
 
-    button.MouseButton1Click:Connect(function()
-        dropDownFrame.Visible = not dropDownFrame.Visible
-    end)
+		local dropdown = Instance.new("Frame")
+		dropdown.Name = "DropdownList"
+		dropdown.Size = UDim2.new(1, 0, 0, #options * 36)
+		dropdown.Position = UDim2.new(0, 0, 1, 4)
+		dropdown.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		dropdown.BackgroundTransparency = 0.15
+		dropdown.BorderSizePixel = 0
+		dropdown.ZIndex = 10
+		dropdown.Parent = holder
+		Instance.new("UICorner", dropdown).CornerRadius = UDim.new(0, 8)
+
+		local layout = Instance.new("UIListLayout", dropdown)
+		layout.Padding = UDim.new(0, 4)
+		layout.SortOrder = Enum.SortOrder.LayoutOrder
+
+		for _, opt in ipairs(options) do
+			local optBtn = Instance.new("TextButton")
+			optBtn.Size = UDim2.new(1, -10, 0, 30)
+			optBtn.Position = UDim2.new(0, 5, 0, 0)
+			optBtn.BackgroundColor3 = Color3.fromRGB(240, 240, 240)
+			optBtn.Text = opt
+			optBtn.TextColor3 = Color3.fromRGB(30, 30, 30)
+			optBtn.Font = Enum.Font.Gotham
+			optBtn.TextSize = 13
+			optBtn.ZIndex = 11
+			optBtn.Parent = dropdown
+			Instance.new("UICorner", optBtn).CornerRadius = UDim.new(0, 6)
+                        optBtn.MouseEnter:Connect(function()
+	optBtn.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
+end)
+
+optBtn.MouseLeave:Connect(function()
+	optBtn.BackgroundColor3 = Color3.fromRGB(240, 240, 240)
+end)
+
+			optBtn.MouseButton1Click:Connect(function()
+	if opt ~= selected then
+		selected = opt
+		dropdownBtn.Text = opt
+		if onSelect then onSelect(opt) end
+	end
+	dropdown:Destroy()
+end)
+
+		-- Click ngoài để đóng
+		local conn
+		conn = UserInputService.InputBegan:Connect(function(input)
+			if input.UserInputType == Enum.UserInputType.MouseButton1 then
+				local mouse = UserInputService:GetMouseLocation()
+				local guiInset = game:GetService("GuiService"):GetGuiInset()
+				local pos = Vector2.new(mouse.X, mouse.Y - guiInset.Y)
+				local abs = dropdown.AbsolutePosition
+				local size = dropdown.AbsoluteSize
+				if not (pos.X >= abs.X and pos.X <= abs.X + size.X and pos.Y >= abs.Y and pos.Y <= abs.Y + size.Y) then
+					dropdown:Destroy()
+					conn:Disconnect()
+				end
+			end
+		end)
+	end)
 end
 
 local function wrapInGlass(frame)
     frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     frame.BackgroundTransparency = 0.25
     frame.BorderSizePixel = 0
-    Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 8)
+    if not frame:FindFirstChildOfClass("UICorner") then
+        Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 8)
+    end
 end
 
-local function createToggleButton(parent, defaultState, size, position)
+local function createToggleButton(parent, defaultState, size, position, onToggle)
     local toggle = Instance.new("Frame")
     toggle.Size = size or UDim2.new(0, 60, 0, 30)
     toggle.Position = position or UDim2.new(0, 0, 0, 0)
@@ -490,6 +543,7 @@ local function createToggleButton(parent, defaultState, size, position)
             state = not state
             toggle.BackgroundColor3 = state and Color3.fromRGB(100, 180, 255) or Color3.fromRGB(220, 220, 220)
             knob:TweenPosition(state and UDim2.new(1, -28, 0, 3) or UDim2.new(0, 4, 0, 3), "Out", "Quad", 0.2, true)
+            if onToggle then onToggle(state) end
         end
     end)
 
@@ -645,8 +699,9 @@ end, 250)
 
 -- tab 2
 addTab("🌠Summon")
-
 local tab2Content = Tabs["🌠Summon"].Content
+
+-- Layout đẹp
 local layout = Instance.new("UIListLayout", tab2Content)
 layout.Padding = UDim.new(0, 8)
 layout.SortOrder = Enum.SortOrder.LayoutOrder
@@ -655,60 +710,124 @@ local padding = Instance.new("UIPadding", tab2Content)
 padding.PaddingLeft = UDim.new(0, 10)
 padding.PaddingRight = UDim.new(0, 10)
 padding.PaddingTop = UDim.new(0, 10)
--- Dropdown chọn X
+
+-- Biến lưu lựa chọn
 local selectedX = "Standard"
 local selectedY = "1"
+local auto = false
+local runAuto = false
 
-local xHolder = Instance.new("Frame")
-xHolder.Size = UDim2.new(1, 0, 0, 40)
-xHolder.Parent = tab2Content
-wrapInGlass(xHolder)
+-- Hàm dropdown glass
+local function createDropdownGlass(parent, labelText, options, defaultValue, onSelect)
+	local holder = Instance.new("Frame")
+	holder.Size = UDim2.new(1, 0, 0, 40)
+	holder.BackgroundTransparency = 1
+	holder.Parent = parent
 
-local xDropdown = Instance.new("TextButton")
-xDropdown.Size = UDim2.new(1, -10, 1, -10)
-xDropdown.Position = UDim2.new(0, 5, 0, 5)
-xDropdown.Text = selectedX
-xDropdown.Parent = xHolder
-xDropdown.Font = Enum.Font.Gotham
-xDropdown.TextSize = 14
-xDropdown.TextColor3 = Color3.fromRGB(30,30,30)
-xDropdown.BackgroundTransparency = 1
+	local label = Instance.new("TextLabel")
+	label.Text = labelText
+	label.Size = UDim2.new(0.5, -10, 1, 0)
+	label.Position = UDim2.new(0, 0, 0, 0)
+	label.BackgroundTransparency = 1
+	label.TextColor3 = Color3.fromRGB(30,30,30)
+	label.Font = Enum.Font.Gotham
+	label.TextSize = 14
+	label.TextXAlignment = Enum.TextXAlignment.Left
+	label.Parent = holder
 
--- Dropdown xử lý (hiện các lựa chọn)
-xDropdown.MouseButton1Click:Connect(function()
-	local menu = Instance.new("Frame")
-	menu.Size = UDim2.new(1, 0, 0, 70)
-	menu.Position = UDim2.new(0, 0, 1, 0)
-	menu.BackgroundColor3 = Color3.fromRGB(240, 240, 240)
-	menu.BorderSizePixel = 0
-	menu.ZIndex = 5
-	wrapInGlass(menu)
-	menu.Parent = xHolder
+	local dropdownBtn = Instance.new("TextButton")
+	dropdownBtn.Text = defaultValue
+	dropdownBtn.Size = UDim2.new(0.5, -10, 1, 0)
+	dropdownBtn.Position = UDim2.new(0.5, 10, 0, 0)
+	dropdownBtn.BackgroundColor3 = Color3.fromRGB(255,255,255)
+	dropdownBtn.BackgroundTransparency = 0.2
+	dropdownBtn.TextColor3 = Color3.fromRGB(30,30,30)
+	dropdownBtn.Font = Enum.Font.Gotham
+	dropdownBtn.TextSize = 14
+	dropdownBtn.Parent = holder
+	Instance.new("UICorner", dropdownBtn).CornerRadius = UDim.new(0, 6)
 
-	for _, val in ipairs({"Standard", "Centered"}) do
-		local btn = Instance.new("TextButton")
-		btn.Size = UDim2.new(1, -10, 0, 30)
-		btn.Position = UDim2.new(0, 5, 0, 5 + (#menu:GetChildren()-1)*35)
-		btn.Text = val
-		btn.BackgroundTransparency = 1
-		btn.Font = Enum.Font.Gotham
-		btn.TextSize = 13
-		btn.TextColor3 = Color3.fromRGB(30,30,30)
-		btn.Parent = menu
-		btn.MouseButton1Click:Connect(function()
-			selectedX = val
-			xDropdown.Text = val
-			menu:Destroy()
+	local selected = defaultValue
+	local UserInputService = game:GetService("UserInputService")
+
+	dropdownBtn.MouseButton1Click:Connect(function()
+		if holder:FindFirstChild("DropdownList") then
+			holder.DropdownList:Destroy()
+			return
+		end
+
+		local dropdown = Instance.new("Frame")
+		dropdown.Name = "DropdownList"
+		dropdown.Size = UDim2.new(1, 0, 0, #options * 36)
+		dropdown.Position = UDim2.new(0, 0, 1, 4)
+		dropdown.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		dropdown.BackgroundTransparency = 0.15
+		dropdown.BorderSizePixel = 0
+		dropdown.ZIndex = 10
+		dropdown.Parent = holder
+		Instance.new("UICorner", dropdown).CornerRadius = UDim.new(0, 8)
+
+		local layout = Instance.new("UIListLayout", dropdown)
+		layout.Padding = UDim.new(0, 4)
+		layout.SortOrder = Enum.SortOrder.LayoutOrder
+
+		for _, opt in ipairs(options) do
+			local optBtn = Instance.new("TextButton")
+			optBtn.Size = UDim2.new(1, -10, 0, 30)
+			optBtn.Position = UDim2.new(0, 5, 0, 0)
+			optBtn.BackgroundColor3 = Color3.fromRGB(240, 240, 240)
+			optBtn.Text = opt
+			optBtn.TextColor3 = Color3.fromRGB(30, 30, 30)
+			optBtn.Font = Enum.Font.Gotham
+			optBtn.TextSize = 13
+			optBtn.ZIndex = 11
+			optBtn.Parent = dropdown
+			Instance.new("UICorner", optBtn).CornerRadius = UDim.new(0, 6)
+
+			optBtn.MouseButton1Click:Connect(function()
+				if opt ~= selected then
+					selected = opt
+					dropdownBtn.Text = opt
+					if onSelect then onSelect(opt) end
+				end
+				dropdown:Destroy()
+			end)
+		end
+
+		local conn
+		conn = UserInputService.InputBegan:Connect(function(input)
+			if input.UserInputType == Enum.UserInputType.MouseButton1 then
+				local mouse = UserInputService:GetMouseLocation()
+				local guiInset = game:GetService("GuiService"):GetGuiInset()
+				local pos = Vector2.new(mouse.X, mouse.Y - guiInset.Y)
+				local abs = dropdown.AbsolutePosition
+				local size = dropdown.AbsoluteSize
+				if not (pos.X >= abs.X and pos.X <= abs.X + size.X and pos.Y >= abs.Y and pos.Y <= abs.Y + size.Y) then
+					dropdown:Destroy()
+					conn:Disconnect()
+				end
+			end
 		end)
-	end
+	end)
+end
+
+-- Tạo dropdown cho X và Y
+createDropdownGlass(tab2Content, "Chế độ:", {"Standard", "Centered"}, selectedX, function(v)
+	selectedX = v
 end)
 
-local auto = false
+createDropdownGlass(tab2Content, "Số lượng:", {"1", "10"}, selectedY, function(v)
+	selectedY = v
+end)
 
+-- Toggle Auto Summon
 local toggleWrap = Instance.new("Frame")
 toggleWrap.Size = UDim2.new(1, 0, 0, 40)
+toggleWrap.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+toggleWrap.BackgroundTransparency = 0.2
+toggleWrap.BorderSizePixel = 0
 toggleWrap.Parent = tab2Content
-wrapInGlass(toggleWrap)
+Instance.new("UICorner", toggleWrap).CornerRadius = UDim.new(0, 8)
 
 local toggle = Instance.new("TextButton")
 toggle.Size = UDim2.new(1, -10, 1, -10)
@@ -721,21 +840,23 @@ toggle.TextColor3 = Color3.fromRGB(30,30,30)
 toggle.Parent = toggleWrap
 
 toggle.MouseButton1Click:Connect(function()
-    auto = not auto
-    toggle.Text = "Auto Summon: " .. (auto and "ON" or "OFF")
-end)
+	auto = not auto
+	toggle.Text = "Auto Summon: " .. (auto and "ON" or "OFF")
 
-task.spawn(function()
-	while true do
-		task.wait(1)
-		if auto then
-			local args = {
-				[1] = tostring(selectedX),
-				[2] = tostring(selectedY),
-				[3] = {}
-			}
-			game:GetService("ReplicatedStorage").Remote.Server.Gambling.UnitsGacha:FireServer(unpack(args))
-		end
+	if auto and not runAuto then
+		runAuto = true
+		task.spawn(function()
+			while auto do
+				local args = {
+					[1] = tostring(selectedX),
+					[2] = tostring(selectedY),
+					[3] = {}
+				}
+				game:GetService("ReplicatedStorage").Remote.Server.Gambling.UnitsGacha:FireServer(unpack(args))
+				task.wait(1)
+			end
+			runAuto = false
+		end)
 	end
 end)
     
