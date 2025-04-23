@@ -718,11 +718,11 @@ local auto = false
 local runAuto = false
 
 -- Tạo dropdown cho X và Y
-createDropdownGlass(tab2Content, "Chế độ:", {"Standard", "Centered"}, selectedX, function(v)
+createDropdownGlass(tab2Content, "Chế độ:", {"Standard", "Centered"}, "Standard", function(v)
 	selectedX = v
 end)
 
-createDropdownGlass(tab2Content, "Số lượng:", {"1", "10"}, selectedY, function(v)
+createDropdownGlass(tab2Content, "Số lượng:", {"1", "10"}, "1", function(v)
 	selectedY = v
 end)
 
